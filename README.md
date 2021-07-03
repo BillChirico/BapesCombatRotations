@@ -1,2 +1,2 @@
-# Bapes Combat Rotations
-Combat rotations built for Trinkr.
+# Bapes Scripts
+Scripts built for Trinkr.
