@@ -1,11 +1,11 @@
 -- Created By Bapes#1111 --
--- Plesae do not distrubute without concent --
+-- Please do not distrubute without concent --
 
 local Tinkr = ...
 local Routine = Tinkr.Routine
 local AceGUI = Tinkr.Util.AceGUI
 local Config = Tinkr.Util.Config
-local config = Config:New('bapes-feral')
+local config = Config:New("bapes-feral")
 local HTTP = Tinkr.Util.HTTP
 local player = "player"
 local target = "target"
@@ -14,7 +14,7 @@ local authenticated = false
 -- AUTH --
 
 local function do_auth()
-    local url = 'https://avaliddomain.getgud.cc'
+    local url = "https://avaliddomain.getgud.cc"
 
     local body = '{"license":"'.. config:Read('license', '') ..'", "lock":"bapesTest"}'
     local headers = {
@@ -24,10 +24,10 @@ local function do_auth()
     HTTP:POST(url, body, headers, function(status, buffer)
         if (status == 200) then
             authenticated = true
-            print('|cFFFFD700[Bapes Scripts]|cFF00FF00 You are authenticated to use Bapes Feral Rotation! Enjoy and please send feedback / support requests to Bapes#1111 on Discord')
+            print("|cFFFFD700[Bapes Scripts]|cFF00FF00 You are authenticated to use Bapes Feral Rotation! Enjoy and please send feedback / support requests to Bapes#1111 on Discord")
         else
             authenticated = false
-            print('|cFFFFD700[Bapes Scripts]|cFFFF0000 Ut oh! You do not have access to this script, please purchase it before continuing and make sure you have entered the license correctly. For support DM Bapes#1111 on Discord |cFF00FF00')
+            print("|cFFFFD700[Bapes Scripts]|cFFFF0000 Ut oh! You do not have access to this script, please purchase it before continuing and make sure you have entered the license correctly. For support DM Bapes#1111 on Discord |cFF00FF00")
         end
     end)
 end
@@ -56,9 +56,9 @@ local function DrawUI()
     license:SetLabel("License")
     license:SetWidth(200)
     license:DisableButton(false)
-    license:SetText(config:Read('license', 'Input license here'))
+    license:SetText(config:Read("license", "Input license here"))
     license:SetCallback("OnTextChanged", function(self, event, text)
-        config:Write('license', text)
+        config:Write("license", text)
     end)
     license:SetCallback("OnEnterPressed", function(self, event, text)
         do_auth()
@@ -79,11 +79,17 @@ Routine:RegisterRoutine(function()
         return
     end
 
-    if gcd() > latency() then return end
+    if gcd() > latency() then
+        return
+    end
 
-    if not latencyCheck() then return end
+    if not latencyCheck() then
+        return
+    end
 
-    if mounted() then return end
+    if mounted() then
+        return
+    end
 
     -- COMBAT --
     local function do_combat()
@@ -198,7 +204,7 @@ Routine:RegisterRoutine(function()
         -- END SPELLS --
 
         -- BUFFS --
-        
+
         -- MOTW
         if castable(motw) and not buff(motw, player) then
             return cast(motw, player)
