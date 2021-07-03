@@ -1,22 +1,22 @@
--- Created By Bapes#1111 -- Loved by Fishballs#5116
+-- Created By Bapes#1111 --
 -- Plesae do not distrubute without concent --
 
 local Tinkr = ...
-local UI = {}
 local Routine = Tinkr.Routine
 local AceGUI = Tinkr.Util.AceGUI
 local Config = Tinkr.Util.Config
 local config = Config:New('bapes-feral')
 local HTTP = Tinkr.Util.HTTP
-local Evaluator = Tinkr.Util.Evaluator
 local player = "player"
 local target = "target"
 local authenticated = false
 
+-- AUTH --
+
 local function do_auth()
     local url = 'https://avaliddomain.getgud.cc'
 
-    local body = '{"license":"NXENDDD4T66TNZ91", "lock":"bapesTest"}'
+    local body = '{"license":"'.. config:Read('license', '') ..'", "lock":"bapesTest"}'
     local headers = {
         "Content-type: application/json"
     }
@@ -24,15 +24,54 @@ local function do_auth()
     HTTP:POST(url, body, headers, function(status, buffer)
         if (status == 200) then
             authenticated = true
-            print ('|cFFFFD700[Bapes Scripts]|cFF00FF00 You are authenticated to use Bapes Feral Rotation! Enjoy and please send feedback / support requests to Bapes#1111 on Discord')
+            print('|cFFFFD700[Bapes Scripts]|cFF00FF00 You are authenticated to use Bapes Feral Rotation! Enjoy and please send feedback / support requests to Bapes#1111 on Discord')
         else
             authenticated = false
-            print ('|cFFFF0000[Bapes Scripts] Ut oh! You do not have access to this script, please purchase it before continuing. For support DM Bapes#1111 on Discord |cFF00FF00')
+            print('|cFFFFD700[Bapes Scripts]|cFFFF0000 Ut oh! You do not have access to this script, please purchase it before continuing and make sure you have entered the license correctly. For support DM Bapes#1111 on Discord |cFF00FF00')
         end
     end)
 end
 
 do_auth()
+
+-- END AUTH --
+
+-- UI --
+
+local function DrawUI()
+    local frame = AceGUI:Create("Window")
+    frame:SetTitle("Bapes Feral Rotation")
+    frame:EnableResize(false)
+    frame:SetWidth(225)
+    frame:SetHeight(140)
+    frame:SetLayout("List")
+    frame:SetCallback("OnClose", function(widget)
+    end)
+
+    local buttonGroup = AceGUI:Create("SimpleGroup")
+    buttonGroup:SetFullWidth(true)
+    buttonGroup:SetHeight(75)
+
+    local license = AceGUI:Create("EditBox")
+    license:SetLabel("License")
+    license:SetWidth(200)
+    license:DisableButton(false)
+    license:SetText(config:Read('license', 'Input license here'))
+    license:SetCallback("OnTextChanged", function(self, event, text)
+        config:Write('license', text)
+    end)
+    license:SetCallback("OnEnterPressed", function(self, event, text)
+        do_auth()
+    end)
+
+    buttonGroup:AddChild(license)
+
+    frame:AddChild(buttonGroup)
+end
+
+DrawUI()
+
+-- END UI --
 
 Routine:RegisterRoutine(function()
     -- Check to make sure the user is authenticated
@@ -208,80 +247,3 @@ Routine:RegisterRoutine(function()
 
 end, Routine.Classes.Druid, 'bapes-feral')
 Routine:LoadRoutine('bapes-feral')
-
--- local bapesFeral_settings = {
---     key = "bapes_feral_config",
---     title = "Bapes Rotations",
---     width = 600,
---     height = 500,
---     color = "F58CBA",
---     resize = false,
---     show = false,
---     table = {
---         {
---             key = "heading",
---             type = "heading",
---             text = "Bapes Feral Druid Rotation"
---         },
---         -- License
---         {
---             key = "license",
---             type = "editbox",
---             text = "License",
---             max = 50
---         }
---     }
--- }
-
--- UI.build_rotation_gui(bapesFeral_settings)
-
--- local wowexUI = {
---     key = "tinkr_configs",
---     title = "Bapes Scripts",
---     width = 840,
---     height = 360,
---     color = "FF0000",
---     resize = true,
---     show = false,
---     table = {
---       {key = "heading", type = "heading",  text = "Bapes Feral Druid Rotation"},
---       {key = "license", type = "editbox", text = "License"},
---       }
---   }
--- wowex.build_gui(wowexUI)
-
--- local bapesFeral_buttons = {
--- }
-
--- UI.button_factory(bapesFeral_buttons)
-
-local function DrawUI()
-    local frame = AceGUI:Create("Window")
-    frame:SetTitle("Bapes Feral Rotation")
-    frame:EnableResize(false)
-    frame:SetWidth(225)
-    frame:SetHeight(140)
-    frame:SetLayout("List")
-    frame:SetCallback("OnClose", function(widget)
-    end)
-    
-
-    local buttonGroup = AceGUI:Create("SimpleGroup")
-    buttonGroup:SetFullWidth(true)
-    buttonGroup:SetHeight(75)
-
-    local license = AceGUI:Create("EditBox")
-    license:SetLabel("License")
-    license:SetWidth(200)
-    license:DisableButton(true)
-    license:SetText('Input license here')
-    license:SetCallback("OnTextChanged", function(self, event, text)
-        print(text)
-    end)
-
-    buttonGroup:AddChild(license)
-
-    frame:AddChild(buttonGroup)
-end
-
-DrawUI()
