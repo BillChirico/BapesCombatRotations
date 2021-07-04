@@ -16,7 +16,7 @@ local authenticated = false
 local function do_auth()
     local url = "https://avaliddomain.getgud.cc"
 
-    local body = '{"license":"'.. config:Read('license', '') ..'", "lock":"bapesTest"}'
+    local body = '{"license":"'.. config:Read('license', '') ..'", "lock":"' .. GetAccountID() ..'"}'
     local headers = {
         "Content-type: application/json"
     }
@@ -251,5 +251,5 @@ Routine:RegisterRoutine(function()
         return
     end
 
-end, Routine.Classes.Druid, 'bapes-feral')
-Routine:LoadRoutine('bapes-feral')
+end, Routine.Classes.Druid, "bapes-feral")
+Routine:LoadRoutine("bapes-feral")

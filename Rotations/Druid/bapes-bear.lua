@@ -16,7 +16,7 @@ local authenticated = false
 local function do_auth()
     local url = "https://avaliddomain.getgud.cc"
 
-    local body = '{"license":"'.. config:Read('license', '') ..'", "lock":"bapesBear"}'
+    local body = '{"license":"'.. config:Read('license', '') ..'", "lock":"' .. GetAccountID() ..'"}'
     local headers = {
         "Content-type: application/json"
     }
@@ -123,7 +123,7 @@ Routine:RegisterRoutine(function()
             if not buff(5487) and castable(5487) then
                 return cast(5487)
             end
-        end        
+        end
 
         -- END BUFFS --
 
