@@ -27,7 +27,7 @@ local function do_auth()
             print("|cFFFFD700[Bapes Scripts]|cFF00FF00 You are authenticated to use Bapes Feral Rotation! Enjoy and please send feedback / support requests to Bapes#1111 on Discord")
         else
             authenticated = false
-            print("|cFFFFD700[Bapes Scripts]|cFFFF0000 Ut oh! You do not have access to this script, please purchase it before continuing and make sure you have entered the license correctly. For support DM Bapes#1111 on Discord |cFF00FF00")
+            print("|cFFFFD700[Bapes Scripts]|cFFFF0000 Ut oh! You do not have access to this script, please purchase it before continuing and make sure you have entered the license correctly. For support DM Bapes#1111 on Discord")
         end
     end)
 end
