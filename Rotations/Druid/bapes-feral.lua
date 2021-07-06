@@ -1,15 +1,61 @@
 -- Created By Bapes#1111 --
 -- Please do not distrubute without concent --
 
+local name = "Bapes Feral Rotation"
+local version = "v1.0"
 local Tinkr = ...
 local Routine = Tinkr.Routine
 local AceGUI = Tinkr.Util.AceGUI
 local Config = Tinkr.Util.Config
 local config = Config:New("bapes-feral")
 local HTTP = Tinkr.Util.HTTP
+local UI = {}
 local player = "player"
 local target = "target"
 local authenticated = false
+
+-- CROMULON --
+
+Tinkr:require("scripts.cromulon.libs.Libdraw.Libs.LibStub.LibStub", UI) --! If you are loading from disk your rotaiton.
+Tinkr:require("scripts.cromulon.libs.Libdraw.LibDraw", UI)
+Tinkr:require("scripts.cromulon.libs.AceGUI30.AceGUI30", UI)
+Tinkr:require("scripts.cromulon.libs.AceGUI30.widgets.AceGUIContainer-BlizOptionsGroup", UI)
+Tinkr:require("scripts.cromulon.libs.AceGUI30.widgets.AceGUIContainer-DropDownGroup", UI)
+Tinkr:require("scripts.cromulon.libs.AceGUI30.widgets.AceGUIContainer-Frame", UI)
+Tinkr:require("scripts.cromulon.libs.AceGUI30.widgets.AceGUIContainer-InlineGroup", UI)
+Tinkr:require("scripts.cromulon.libs.AceGUI30.widgets.AceGUIContainer-ScrollFrame", UI)
+Tinkr:require("scripts.cromulon.libs.AceGUI30.widgets.AceGUIContainer-SimpleGroup", UI)
+Tinkr:require("scripts.cromulon.libs.AceGUI30.widgets.AceGUIContainer-TabGroup", UI)
+Tinkr:require("scripts.cromulon.libs.AceGUI30.widgets.AceGUIContainer-TreeGroup", UI)
+Tinkr:require("scripts.cromulon.libs.AceGUI30.widgets.AceGUIContainer-Window", UI)
+Tinkr:require("scripts.cromulon.libs.AceGUI30.widgets.AceGUIWidget-Button", UI)
+Tinkr:require("scripts.cromulon.libs.AceGUI30.widgets.AceGUIWidget-CheckBox", UI)
+Tinkr:require("scripts.cromulon.libs.AceGUI30.widgets.AceGUIWidget-ColorPicker", UI)
+Tinkr:require("scripts.cromulon.libs.AceGUI30.widgets.AceGUIWidget-DropDown", UI)
+Tinkr:require("scripts.cromulon.libs.AceGUI30.widgets.AceGUIWidget-DropDown-Items", UI)
+Tinkr:require("scripts.cromulon.libs.AceGUI30.widgets.AceGUIWidget-EditBox", UI)
+Tinkr:require("scripts.cromulon.libs.AceGUI30.widgets.AceGUIWidget-Heading", UI)
+Tinkr:require("scripts.cromulon.libs.AceGUI30.widgets.AceGUIWidget-Icon", UI)
+Tinkr:require("scripts.cromulon.libs.AceGUI30.widgets.AceGUIWidget-InteractiveLabel", UI)
+Tinkr:require("scripts.cromulon.libs.AceGUI30.widgets.AceGUIWidget-Keybinding", UI)
+Tinkr:require("scripts.cromulon.libs.AceGUI30.widgets.AceGUIWidget-Label", UI)
+Tinkr:require("scripts.cromulon.libs.AceGUI30.widgets.AceGUIWidget-MultiLineEditBox", UI)
+Tinkr:require("scripts.cromulon.libs.AceGUI30.widgets.AceGUIWidget-Slider", UI)
+Tinkr:require("scripts.cromulon.system.configs", UI)
+Tinkr:require("scripts.cromulon.libs.libCh0tFqRg.libCh0tFqRg", UI)
+Tinkr:require("scripts.cromulon.libs.libNekSv2Ip.libNekSv2Ip", UI)
+Tinkr:require("scripts.cromulon.libs.CallbackHandler10.CallbackHandler10", UI)
+Tinkr:require("scripts.cromulon.libs.HereBeDragons.HereBeDragons-20", UI)
+Tinkr:require("scripts.cromulon.libs.HereBeDragons.HereBeDragons-pins-20", UI)
+Tinkr:require("scripts.cromulon.interface.uibuilder", UI)
+Tinkr:require("scripts.cromulon.interface.buttons", UI)
+mybuttons.On = false
+mybuttons.Cooldowns = false
+mybuttons.MultiTarget = false
+mybuttons.Interupts = false
+mybuttons.Settings = false
+
+-- END CROMULON --
 
 -- AUTH --
 
@@ -36,7 +82,7 @@ do_auth()
 
 -- END AUTH --
 
--- UI --
+-- LICENSE UI --
 
 local function DrawUI()
     local frame = AceGUI:Create("Window")
@@ -71,7 +117,11 @@ end
 
 DrawUI()
 
--- END UI --
+-- END LICENSE UI --
+
+
+-- Print name and version
+print("|cFFFFD700[Bapes Scripts]|cFF00FF00 " .. name .. version)
 
 Routine:RegisterRoutine(function()
     -- Check to make sure the user is authenticated
@@ -95,6 +145,12 @@ Routine:RegisterRoutine(function()
     local function do_combat()
         local mana = power()
         local comboPoints = GetComboPoints(player, target)
+
+        -- SETTINGS --
+
+        local healInCombat = UI.config.read('healInCombat', 'true')
+
+        -- END SETTINGS --
 
         -- SPELLS --
 
@@ -120,16 +176,18 @@ Routine:RegisterRoutine(function()
 
         -- HEALING --
 
-        if health() <= 40 and castable(barkSkin) then
-            return cast(barkSkin, player)
-        end
+        if healInCombat then
+            if health() <= 40 and castable(barkSkin) then
+                return cast(barkSkin, player)
+            end
 
-        if health() <= 40 and castable(rejuvenation) and not buff(rejuvenation, player) then
-            return cast(rejuvenation, player)
-        end
+            if health() <= 40 and castable(rejuvenation) and not buff(rejuvenation, player) then
+                return cast(rejuvenation, player)
+            end
 
-        if health() <= 40 and castable(regrowth) and not buff(regrowth, player) then
-            return cast(regrowth, player)
+            if health() <= 40 and castable(regrowth) and not buff(regrowth, player) then
+                return cast(regrowth, player)
+            end
         end
 
         -- END HEALING --
@@ -253,3 +311,33 @@ Routine:RegisterRoutine(function()
 
 end, Routine.Classes.Druid, "bapes-feral")
 Routine:LoadRoutine("bapes-feral")
+
+local bapesFeral_settings = {
+    key = "bapes_feral_config",
+    title = "Bapes Scripts",
+    width = 600,
+    height = 500,
+    color = "F58CBA",
+    resize = false,
+    show = false,
+    table = {
+        {
+            key = "heading",
+            type = "heading",
+            text = "Bapes Feral Druid Rotation"
+        },
+        -- License
+        {
+            key = "healInCombat",
+            type = "checkbox",
+            text = "Heal in Combat"
+        }
+    }
+}
+
+UI.build_rotation_gui(bapesFeral_settings)
+
+local bapesFeral_buttons = {
+}
+
+UI.button_factory(bapesFeral_buttons)
