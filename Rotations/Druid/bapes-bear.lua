@@ -1,6 +1,8 @@
 -- Created By Bapes#1111 --
 -- Please do not distrubute without concent --
 
+local name = "Bapes Bear Rotation"
+local version = "v1.0"
 local Tinkr = ...
 local Routine = Tinkr.Routine
 local AceGUI = Tinkr.Util.AceGUI
@@ -24,7 +26,7 @@ local function do_auth()
     HTTP:POST(url, body, headers, function(status, buffer)
         if (status == 200) then
             authenticated = true
-            print("|cFFFFD700[Bapes Scripts]|cFF00FF00 You are authenticated to use Bapes Bear Rotation! Enjoy and please send feedback / support requests to Bapes#1111 on Discord")
+            print("|cFFFFD700[Bapes Scripts]|cFF00FF00 You are authenticated to use " .. name .. "! Enjoy and please send feedback / support requests to Bapes#1111 on Discord")
         else
             authenticated = false
             print("|cFFFFD700[Bapes Scripts]|cFFFF0000 Ut oh! You do not have access to this script, please purchase it before continuing and make sure you have entered the license correctly. For support DM Bapes#1111 on Discord")
@@ -36,11 +38,14 @@ do_auth()
 
 -- END AUTH --
 
+-- Print name and version
+print("|cFFFFD700[Bapes Scripts]|CFF959697 " .. name .. " " .. version)
+
 -- UI --
 
 local function DrawUI()
     local frame = AceGUI:Create("Window")
-    frame:SetTitle("Bapes Bear Rotation")
+    frame:SetTitle(name " " .. version)
     frame:EnableResize(false)
     frame:SetWidth(225)
     frame:SetHeight(140)
@@ -98,6 +103,13 @@ Routine:RegisterRoutine(function()
 
         -- SPELLS --
 
+        local bearForm = highestrank(5487)
+
+        -- Dire Bear
+        if not bearForm then
+            bearForm = highestrank(9634)
+        end
+
         local frenziedRegeneration = highestrank(22842)
 
         local faerieFire = highestrank(16857)
@@ -117,12 +129,8 @@ Routine:RegisterRoutine(function()
         -- BUFFS --
 
         -- Bear Form
-        if not buff(9634) and castable(9634) then
-            return cast(9634)
-        else
-            if not buff(5487) and castable(5487) then
-                return cast(5487)
-            end
+        if not buff(bearForm) and castable(bearForm) then
+            return cast(bearForm)
         end
 
         -- END BUFFS --
@@ -195,8 +203,8 @@ Routine:RegisterRoutine(function()
 
         -- BUFFS --
 
-        -- MOTW
-        if castable(motw) and not buff(motw, player) then
+        -- MOTW (Check for GOTW)
+        if castable(motw) and not buff(motw, player) and not buff(21849, player) and not buff(21850, player) and not buff(26991, player) then
             return cast(motw, player)
         end
 
@@ -213,7 +221,7 @@ Routine:RegisterRoutine(function()
         -- END BUFFS --
 
         -- Bear Form
-        if UnitExists(target) and alive(target) and not buff(5487) and castable(5487) and distance(player, target) <= math.random(30, 40) then
+        if UnitExists(target) and alive(target) and not buff(5487) and castable(5487) and distance(player, target) <= math.random(25, 40) then
             return cast(5487)
         end
 
@@ -232,4 +240,3 @@ Routine:RegisterRoutine(function()
     end
 
 end, Routine.Classes.Druid, "bapes-bear")
-Routine:LoadRoutine("bapes-bear")

@@ -70,7 +70,7 @@ local function do_auth()
     HTTP:POST(url, body, headers, function(status, buffer)
         if (status == 200) then
             authenticated = true
-            print("|cFFFFD700[Bapes Scripts]|cFF00FF00 You are authenticated to use Bapes Feral Rotation! Enjoy and please send feedback / support requests to Bapes#1111 on Discord")
+            print("|cFFFFD700[Bapes Scripts]|cFF00FF00 You are authenticated to use " .. name .. "! Enjoy and please send feedback / support requests to Bapes#1111 on Discord")
         else
             authenticated = false
             print("|cFFFFD700[Bapes Scripts]|cFFFF0000 Ut oh! You do not have access to this script, please purchase it before continuing and make sure you have entered the license correctly. For support DM Bapes#1111 on Discord")
@@ -86,7 +86,7 @@ do_auth()
 
 local function DrawUI()
     local frame = AceGUI:Create("Window")
-    frame:SetTitle("Bapes Feral Rotation")
+    frame:SetTitle(name " " .. version)
     frame:EnableResize(false)
     frame:SetWidth(225)
     frame:SetHeight(140)
@@ -118,7 +118,6 @@ end
 DrawUI()
 
 -- END LICENSE UI --
-
 
 -- Print name and version
 print("|cFFFFD700[Bapes Scripts]|CFF959697 " .. name .. " " .. version)
@@ -409,7 +408,7 @@ local bapesFeral_settings = {
         {
             key = "heading",
             type = "heading",
-            text = "Bapes Feral Druid Rotation"
+            text = name " " .. version
         },
         -- Healing --
         {
