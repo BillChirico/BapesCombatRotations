@@ -12,6 +12,7 @@ local HTTP = Tinkr.Util.HTTP
 local UI = {}
 local player = "player"
 local target = "target"
+local pet = "pet"
 local authenticated = false
 
 -- CROMULON --
@@ -146,16 +147,23 @@ Routine:RegisterRoutine(function()
 
         -- SETTINGS --
 
+        local mendPetInCombat = UI.config.read("mendPetInCombat", "true")
+        local mendPetPercentage = UI.config.read("mendPetPercentage", 50)
 
         -- END SETTINGS --
 
         -- SPELLS --
 
         local autoShot = highestrank(75)
+        local huntersMark = highestrank(1130)
         local concussiveShot = highestrank(5116)
 
-        local aspectViper = highestrank(34074)
-        local aspectHawk = highestrank(13165)
+        local raptorStrike = highestrank(32915)
+        local mongooseBite = highestrank(1495)
+        local steadyShot = highestrank(34120)
+        local killCommand = highestrank(34026)
+
+        local rapidFire = highestrank(36828)
 
         local mendPet = highestrank(136)
 
@@ -164,25 +172,31 @@ Routine:RegisterRoutine(function()
         -- HEALING --
 
         -- Mend Pet
-        if not UnitIsDeadOrGhost("pet") and IsPetActive() then
-            if health("pet") < 50 and not buff(mendPet, "pet") and castable(mendPet, "pet") then
-                return cast(mendPet, "pet")
+        if mendPetInCombat and not UnitIsDeadOrGhost(pet) and IsPetActive() then
+            if health(pet) <= mendPetPercentage and not buff(mendPet, pet) and castable(mendPet, pet) then
+                return cast(mendPet, pet)
             end
         end
 
         -- END HEALING --
 
+        -- BUFFS --
+
+
+
+        -- END BUFFS --
+
         -- ATTACK START --
 
-        if not melee() and castable(autoShot, "target") and not IsAutoRepeatSpell(autoShot) then
-            return cast(autoShot, "target")
+        if not melee() and castable(autoShot, target) and not IsAutoRepeatSpell(autoShot) then
+            return cast(autoShot, target)
         end
 
-        if melee() and not IsPlayerAttacking("target") then
+        if melee() and not IsPlayerAttacking(target) then
             Eval("StartAttack()", "t")
         end
 
-        if not UnitIsDeadOrGhost("pet") and IsPetActive() then
+        if not UnitIsDeadOrGhost(pet) and IsPetActive() then
             Eval("PetAttack()", "t")
         end
 
@@ -190,9 +204,33 @@ Routine:RegisterRoutine(function()
 
         -- Rotation --
 
+        -- Hunter's Mark
+        if not immune(target, huntersMark) and castable(huntersMark, target) and not debuff(huntersMark, target) then
+            return cast(huntersMark, target)
+        end
+
         -- Concussive Shot
-        if moving("target") and not melee() and UnitIsUnit("player", "targettarget") and castable(concussiveShot, 'target') then
-            return cast(concussiveShot, "target")
+        if moving(target) and not melee() and UnitIsUnit("player", "targettarget") and castable(concussiveShot, target) then
+            return cast(concussiveShot, target)
+        end
+
+        if castable(killCommand, target) then
+            return cast(killCommand, target)
+        end
+
+        -- Steady Shot
+        if (spellisspell(lastspell(), autoShot) or not spellisspell(lastspell(), steadyShot)) and castable(steadyShot, target) then
+            return cast(steadyShot, target)
+        end
+
+        -- Mongoose Bite
+        if castable(mongooseBite, target) then
+            return cast(mongooseBite, target)
+        end
+
+        -- Raptor Strike
+        if castable(raptorStrike, target) then
+            return cast(raptorStrike, target)
         end
 
         -- END ROTATION --
@@ -206,6 +244,7 @@ Routine:RegisterRoutine(function()
 
         -- SETTINGS --
 
+        local aspect = UI.config.read("aspect", "Viper")
 
         -- END SETTINGS --
 
@@ -223,7 +262,7 @@ Routine:RegisterRoutine(function()
         -- PET --
 
         -- Revive Pet
-        if UnitIsDeadOrGhost("pet") and castable(revivePet) then
+        if UnitIsDeadOrGhost(pet) and castable(revivePet) then
             return cast(revivePet, player)
         end
 
@@ -237,9 +276,9 @@ Routine:RegisterRoutine(function()
         -- HEALING --
 
         -- Mend Pet
-        if not UnitIsDeadOrGhost("pet") and IsPetActive() then
-            if health("pet") < 90 and not buff(mendPet, "pet") and castable(mendPet, "pet") then
-                return cast(mendPet, "pet")
+        if not UnitIsDeadOrGhost(pet) and IsPetActive() then
+            if health(pet) < 90 and not buff(mendPet, pet) and castable(mendPet, pet) then
+                return cast(mendPet, pet)
             end
         end
 
@@ -248,14 +287,17 @@ Routine:RegisterRoutine(function()
         -- BUFFS --
 
         -- Aspect
-        if castable(aspectViper) and not buff(aspectViper, player) then
+        if aspect == "Viper" and castable(aspectViper) and not buff(aspectViper, player) then
             return cast(aspectViper, player)
+        else if aspect == "Hawk" and castable(aspectHawk) and not buff(aspectHawk, player) then
+                return cast(aspectHawk, player)
+            end
         end
 
         -- END BUFFS --
 
         -- Pet Attack
-        if UnitExists(target) and alive(target) and distance(player, target) <= math.random(20, 40) then
+        if UnitExists(target) and alive(target) and distance(player, target) <= math.random(35, 45) then
             Eval("PetAttack()", "t")
         end
     end
@@ -291,24 +333,18 @@ local bapesBM_settings = {
             type = "heading",
             text = "Healing"
         },
-        -- Heal in Combat
+        -- Mend Pet in Combat
         {
-            key = "healInCombat",
+            key = "mendPetInCombat",
             type = "checkbox",
-            text = "Heal in Combat"
+            text = "Mend Pet in Combat"
         },
-        -- Heal out of Combat
+        -- Mend Pet Percentage
         {
-            key = "healOutOfCombat",
-            type = "checkbox",
-            text = "Heal out of Combat"
-        },
-        -- Healing Percentage
-        {
-            key = "healPercentage",
+            key = "mendPetPercentage",
             type = "slider",
-            text = "Healing Percentage",
-            label = "Healing %",
+            text = "Mend Pet Percentage",
+            label = "Mend Pet %",
             min = 5,
             max = 95,
             step = 5
@@ -319,34 +355,14 @@ local bapesBM_settings = {
             type = "heading",
             text = "Buffs"
         },
-        -- Innervate
+        -- Aspect
         {
-            key = "useInnervate",
-            type = "checkbox",
-            text = "Use Innervate"
-        },
-        -- Forms --
-        {
-            key = "heading",
-            type = "heading",
-            text = "Forms"
-        },
-        -- Bear Form
-        {
-            key = "useBearForm",
-            type = "checkbox",
-            text = "Use Bear Form"
-        },
-        -- Bear Form Percentage
-        {
-            key = "bearFormPercentage",
-            type = "slider",
-            text = "Bear Form Percentage",
-            label = "Bear Form %",
-            min = 5,
-            max = 95,
-            step = 5
-        },
+            key = "aspect",
+            -- width = 130,
+            label = "Aspect",
+            type = "dropdown",
+            options = {"Viper", "Hawk"}
+        }
     }
 }
 
