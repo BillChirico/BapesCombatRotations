@@ -134,7 +134,7 @@ Routine:RegisterRoutine(function()
             return cast(frenziedRegeneration, player)
         end
 
-        -- Frenzied Regeneration is still going to don't use abilities
+        -- Frenzied Regeneration is still going so don't use abilities
         if buff(frenziedRegeneration) then
             return
         end

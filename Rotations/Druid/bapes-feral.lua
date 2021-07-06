@@ -121,7 +121,7 @@ DrawUI()
 
 
 -- Print name and version
-print("|cFFFFD700[Bapes Scripts]|cFF00FF00 " .. name .. version)
+print("|cFFFFD700[Bapes Scripts]|CFF959697 " .. name .. " " .. version)
 
 Routine:RegisterRoutine(function()
     -- Check to make sure the user is authenticated
@@ -145,14 +145,29 @@ Routine:RegisterRoutine(function()
     local function do_combat()
         local mana = power()
         local comboPoints = GetComboPoints(player, target)
+        local rage = power(PowerType.Rage)
 
         -- SETTINGS --
 
         local healInCombat = UI.config.read('healInCombat', 'true')
+        local healPercentage = UI.config.read('healPercentage', 40)
+
+        local useInnervate = UI.config.read('useInnervate', 'true')
+
+        local useBearForm = UI.config.read('useBearForm', 'true')
+        local bearFormPercentage = UI.config.read('bearFormPercentage', 50)
 
         -- END SETTINGS --
 
         -- SPELLS --
+
+        local catForm = highestrank(768)
+        local bearForm = highestrank(5487)
+
+        -- Dire Bear
+        if not bearForm then
+            bearForm = highestrank(9634)
+        end
 
         local barkSkin = highestrank(22812)
         local regrowth = highestrank(8936)
@@ -161,11 +176,18 @@ Routine:RegisterRoutine(function()
         local innervate = highestrank(29166)
         local faerieFire = highestrank(16857)
 
+        -- Cat
         local rake = highestrank(1822)
         local mangle = highestrank(33876)
         local rip = highestrank(1079)
         local ferociousBite = highestrank(22568)
         local shred = highestrank(5221)
+
+        -- Bear
+        local frenziedRegeneration = highestrank(22842)
+        local lacerate = highestrank(33745)
+        local maul = highestrank(6807)
+        local bearMangle = highestrank(33878)
 
         -- END SPELLS --
 
@@ -176,16 +198,16 @@ Routine:RegisterRoutine(function()
 
         -- HEALING --
 
-        if healInCombat then
-            if health() <= 40 and castable(barkSkin) then
+        if healInCombat and not buff(frenziedRegeneration) then
+            if health() <= healPercentage and castable(barkSkin) then
                 return cast(barkSkin, player)
             end
 
-            if health() <= 40 and castable(rejuvenation) and not buff(rejuvenation, player) then
+            if health() <= healPercentage and castable(rejuvenation) and not buff(rejuvenation, player) then
                 return cast(rejuvenation, player)
             end
 
-            if health() <= 40 and castable(regrowth) and not buff(regrowth, player) then
+            if health() <= healPercentage and castable(regrowth) and not buff(regrowth, player) then
                 return cast(regrowth, player)
             end
         end
@@ -194,13 +216,19 @@ Routine:RegisterRoutine(function()
 
         -- BUFFS --
 
-        if mana <= 45 and castable(innervate) then
+        if mana <= 45 and castable(innervate) and useInnervate then
             return cast(innervate, player)
         end
 
-        -- Feral Cat Form
-        if not buff(768) and castable(768) then
-            return cast(768)
+        -- Bear Form
+        if useBearForm and health() <= bearFormPercentage and not buff(bearForm) and castable(bearForm) then
+            return cast(bearForm)
+        else
+            -- Cat Form
+            if not buff(catForm) and castable(catForm) and not buff(bearForm) then
+                print("cat form")
+                return cast(catForm)
+            end
         end
 
         -- END BUFFS --
@@ -213,33 +241,68 @@ Routine:RegisterRoutine(function()
 
         -- END DEBUFFS --
 
-        -- ROTATION --
+        -- CAT ROTATION --
 
-        -- Rake
-        if not debuff(rake, target) and comboPoints < 5 and castable(rake) then
-            return cast(rake, target)
-        end
+        if buff(catForm) then
+            -- Rake
+            if not debuff(rake, target) and comboPoints < 5 and castable(rake) then
+                return cast(rake, target)
+            end
 
-        -- Mangle Spam
-        if comboPoints < 5 and castable(mangle, target)then
-            return cast(mangle, target)
-        end
+            -- Mangle Spam
+            if comboPoints < 5 and castable(mangle, target)then
+                return cast(mangle, target)
+            end
 
-        -- Rip
-        if health(target) >= 40 and comboPoints >= 4 and castable(rip, target)  then
-            return cast(rip, target)
-        -- Ferocious Bite
-        else if comboPoints >= 5 and castable(ferociousBite, target) then
-                return cast(ferociousBite, target)
+            -- Rip
+            if health(target) >= 40 and comboPoints >= 4 and castable(rip, target)  then
+                return cast(rip, target)
+            -- Ferocious Bite
+            else if comboPoints >= 5 and castable(ferociousBite, target) then
+                    return cast(ferociousBite, target)
+                end
+            end
+
+            -- Shred with Clearcasting
+            if castable(shred, target) and buff(16870, player) then
+                return cast(shred, target)
             end
         end
 
-        -- Shred with Clearcasting
-        if castable(shred, target) and buff(16870, player) then
-            return cast(shred, target)
+        -- END CAT ROTATION --
+
+        -- BEAR ROTATION --
+
+        if buff(bearForm) then
+            -- Frenzied Regeneration
+            if health() <= 35 and castable(frenziedRegeneration) then
+                return cast(frenziedRegeneration, player)
+            end
+
+            -- Frenzied Regeneration is still going so don't use abilities
+            if buff(frenziedRegeneration) then
+                return
+            end
+
+            if rage < 75 then
+                -- Lacerate
+                if castable(lacerate, target) then
+                    return cast(lacerate, target)
+                end
+            else
+                -- Maul
+                if castable(maul, target) then
+                    return cast(maul, target)
+                end
+            end
+    
+            -- Mangle Spam
+            if castable(bearMangle, target) then
+                return cast(bearMangle, target)
+            end
         end
 
-        -- END ROTATION --
+        -- END BEAR ROTATION --
 
     end
 
@@ -249,7 +312,19 @@ Routine:RegisterRoutine(function()
             return
         end
 
+        -- SETTINGS --
+
+        local healOutOfCombat = UI.config.read('healOutOfCombat', 'true')
+
+        -- END SETTINGS --
+
         -- SPELLS --
+
+        local catForm = highestrank(768)
+
+        local regrowth = highestrank(8936)
+        local rejuvenation = highestrank(774)
+        local healingTouch = highestrank(5185)
 
         local motw = highestrank(1126)
         local thorns = highestrank(467)
@@ -261,10 +336,20 @@ Routine:RegisterRoutine(function()
 
         -- END SPELLS --
 
+        -- HEALING --
+
+        if healOutOfCombat then
+            if health() <= 60 and castable(rejuvenation) and not buff(rejuvenation, player) then
+                return cast(rejuvenation, player)
+            end
+        end
+
+        -- END HEALING --
+
         -- BUFFS --
 
-        -- MOTW
-        if castable(motw) and not buff(motw, player) then
+        -- MOTW (Check for GOTW)
+        if castable(motw) and not buff(motw, player) and not buff(21849, player) and not buff(21850, player) and not buff(26991, player) then
             return cast(motw, player)
         end
 
@@ -280,9 +365,9 @@ Routine:RegisterRoutine(function()
 
         -- END BUFFS --
 
-        -- Feral Cat Form
-        if UnitExists(target) and alive(target) and not buff(768) and castable(768) and distance(player, target) <= math.random(30, 40) then
-            return cast(768)
+        -- Cat Form
+        if UnitExists(target) and alive(target) and not buff(catForm) and castable(catForm) and distance(player, target) <= math.random(25, 40) then
+            return cast(catForm)
         end
 
         -- Stealth
@@ -315,8 +400,8 @@ Routine:LoadRoutine("bapes-feral")
 local bapesFeral_settings = {
     key = "bapes_feral_config",
     title = "Bapes Scripts",
-    width = 600,
-    height = 500,
+    width = 400,
+    height = 300,
     color = "F58CBA",
     resize = false,
     show = false,
@@ -326,12 +411,68 @@ local bapesFeral_settings = {
             type = "heading",
             text = "Bapes Feral Druid Rotation"
         },
-        -- License
+        -- Healing --
+        {
+            key = "heading",
+            type = "heading",
+            text = "Healing"
+        },
+        -- Heal in Combat
         {
             key = "healInCombat",
             type = "checkbox",
             text = "Heal in Combat"
-        }
+        },
+        -- Heal out of Combat
+        {
+            key = "healOutOfCombat",
+            type = "checkbox",
+            text = "Heal out of Combat"
+        },
+        -- Healing Percentage
+        {
+            key = "healPercentage",
+            type = "slider",
+            text = "Healing Percentage",
+            label = "Healing %",
+            min = 5,
+            max = 95,
+            step = 5
+        },
+        -- Buffs --
+        {
+            key = "heading",
+            type = "heading",
+            text = "Buffs"
+        },
+        -- Innervate
+        {
+            key = "useInnervate",
+            type = "checkbox",
+            text = "Use Innervate"
+        },
+        -- Forms --
+        {
+            key = "heading",
+            type = "heading",
+            text = "Forms"
+        },
+        -- Bear Form
+        {
+            key = "useBearForm",
+            type = "checkbox",
+            text = "Use Bear Form"
+        },
+        -- Bear Form Percentage
+        {
+            key = "bearFormPercentage",
+            type = "slider",
+            text = "Bear Form Percentage",
+            label = "Bear Form %",
+            min = 5,
+            max = 95,
+            step = 5
+        },
     }
 }
 
