@@ -128,7 +128,7 @@ Routine:RegisterRoutine(function()
             return cast(rejuvenation, player)
         end
 
-        if health() <= 40 and castable(regrowth) then
+        if health() <= 40 and castable(regrowth) and not buff(regrowth, player) then
             return cast(regrowth, player)
         end
 
