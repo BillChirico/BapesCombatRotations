@@ -136,10 +136,6 @@ Routine:RegisterRoutine(function()
         return
     end
 
-    if mounted() then
-        return
-    end
-
     -- COMBAT --
     local function do_combat()
         local mana = power()
