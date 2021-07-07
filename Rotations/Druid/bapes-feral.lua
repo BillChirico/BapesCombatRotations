@@ -86,7 +86,7 @@ do_auth()
 
 local function DrawUI()
     local frame = AceGUI:Create("Window")
-    frame:SetTitle(name " " .. version)
+    frame:SetTitle(name .. " " .. version)
     frame:EnableResize(false)
     frame:SetWidth(225)
     frame:SetHeight(140)
@@ -408,7 +408,7 @@ local bapesFeral_settings = {
         {
             key = "heading",
             type = "heading",
-            text = name " " .. version
+            text = name .. " " .. version
         },
         -- Healing --
         {

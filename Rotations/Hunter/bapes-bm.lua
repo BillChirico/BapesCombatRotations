@@ -149,6 +149,7 @@ Routine:RegisterRoutine(function()
 
         local mendPetInCombat = UI.config.read("mendPetInCombat", "true")
         local mendPetPercentage = UI.config.read("mendPetPercentage", 50)
+        local useTraps = UI.config.read("useTraps", "true")
 
         -- END SETTINGS --
 
@@ -157,13 +158,19 @@ Routine:RegisterRoutine(function()
         local autoShot = highestrank(75)
         local huntersMark = highestrank(1130)
         local concussiveShot = highestrank(5116)
+        local snakeTrap = highestrank(34600)
+        local explosiveTrap = highestrank(13813)
+        local misdirection = highestrank(34477)
 
         local raptorStrike = highestrank(32915)
         local mongooseBite = highestrank(1495)
         local steadyShot = highestrank(34120)
         local killCommand = highestrank(34026)
+        local multiShot = highestrank(2643)
 
         local rapidFire = highestrank(36828)
+        local intimidation = highestrank(19577)
+        local bestialWrath = highestrank(19574)
 
         local mendPet = highestrank(136)
 
@@ -182,7 +189,20 @@ Routine:RegisterRoutine(function()
 
         -- BUFFS --
 
+        -- Bestial Wrath
+        if health(target) > 50 and castable(bestialWrath, player) and not buff(bestialWrath, player) then
+            return cast(bestialWrath, player)
+        end
 
+        -- Intimidation
+        if health(target) > 30 and castable(intimidation, target) then
+            return cast(intimidation, target)
+        end
+
+        -- Rapid Fire
+        if health(target) > 50 and castable(rapidFire, player) and not buff(rapidFire, player) then
+            return cast(rapidFire, player)
+        end
 
         -- END BUFFS --
 
@@ -210,12 +230,31 @@ Routine:RegisterRoutine(function()
         end
 
         -- Concussive Shot
-        if moving(target) and not melee() and UnitIsUnit("player", "targettarget") and castable(concussiveShot, target) then
+        if moving(target) and not melee() and UnitIsUnit(player, "targettarget") and castable(concussiveShot, target) then
             return cast(concussiveShot, target)
         end
 
+        -- Traps
+        if useTraps and melee() then
+            if enemies(target, 20) >= 2 then
+                if castable(explosiveTrap, target) then
+                    return cast(explosiveTrap, target)
+                end
+            else
+                if castable(snakeTrap, target) then
+                    return cast(snakeTrap, target)
+                end
+            end
+        end
+
+        -- Kill Command
         if castable(killCommand, target) then
             return cast(killCommand, target)
+        end
+
+        -- Multi Shot
+        if enemies(target, 20) >= 2 and castable(multiShot, target) then
+            return cast(multiShot, target)
         end
 
         -- Steady Shot
@@ -267,7 +306,7 @@ Routine:RegisterRoutine(function()
         end
 
         -- Call Pet
-        if not IsPetActive() then
+        if not IsPetActive() and castable(callPet, player) then
             return cast(callPet, player)
         end
 
@@ -289,7 +328,8 @@ Routine:RegisterRoutine(function()
         -- Aspect
         if aspect == "Viper" and castable(aspectViper) and not buff(aspectViper, player) then
             return cast(aspectViper, player)
-        else if aspect == "Hawk" and castable(aspectHawk) and not buff(aspectHawk, player) then
+        else
+            if aspect == "Hawk" and castable(aspectHawk) and not buff(aspectHawk, player) then
                 return cast(aspectHawk, player)
             end
         end
@@ -362,6 +402,18 @@ local bapesBM_settings = {
             label = "Aspect",
             type = "dropdown",
             options = {"Viper", "Hawk"}
+        },
+        -- Combat Options --
+        {
+            key = "heading",
+            type = "heading",
+            text = "Combat Options"
+        },
+        -- Use Traps
+        {
+            key = "useTraps",
+            type = "checkbox",
+            text = "Use Traps"
         }
     }
 }
