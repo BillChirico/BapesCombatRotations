@@ -17,7 +17,7 @@ local authenticated = false
 
 -- CROMULON --
 
-Tinkr:require("scripts.cromulon.libs.Libdraw.Libs.LibStub.LibStub", UI) --! If you are loading from disk your rotaiton.
+Tinkr:require("scripts.cromulon.libs.Libdraw.Libs.LibStub.LibStub", UI)
 Tinkr:require("scripts.cromulon.libs.Libdraw.LibDraw", UI)
 Tinkr:require("scripts.cromulon.libs.AceGUI30.AceGUI30", UI)
 Tinkr:require("scripts.cromulon.libs.AceGUI30.widgets.AceGUIContainer-BlizOptionsGroup", UI)
@@ -137,10 +137,6 @@ Routine:RegisterRoutine(function()
         return
     end
 
-    if mounted() then
-        return
-    end
-
     -- COMBAT --
     local function do_combat()
         local mana = power()
@@ -247,6 +243,11 @@ Routine:RegisterRoutine(function()
             end
         end
 
+        -- Misdirection
+        if UnitIsUnit(player, "targettarget") and castable(misdirection, pet) then
+            return cast(misdirection, pet)
+        end
+
         -- Kill Command
         if castable(killCommand, target) then
             return cast(killCommand, target)
@@ -277,7 +278,7 @@ Routine:RegisterRoutine(function()
 
     -- RESTING --
     local function do_resting()
-        if UnitIsDeadOrGhost(player) or UnitIsDeadOrGhost(target) then
+        if UnitIsDeadOrGhost(player) or UnitIsDeadOrGhost(target) or IsEatingOrDrinking() then
             return
         end
 
