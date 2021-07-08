@@ -2,7 +2,7 @@
 -- Please do not distrubute without concent --
 
 local name = "Bapes Feral Rotation"
-local version = "v1.0"
+local version = "v1.1"
 local Tinkr = ...
 local Routine = Tinkr.Routine
 local AceGUI = Tinkr.Util.AceGUI
@@ -221,7 +221,6 @@ Routine:RegisterRoutine(function()
         else
             -- Cat Form
             if not buff(catForm) and castable(catForm) and not buff(bearForm) then
-                print("cat form")
                 return cast(catForm)
             end
         end
@@ -356,8 +355,8 @@ Routine:RegisterRoutine(function()
             return cast(motw, player)
         end
 
-        -- Thorns
-        if castable(thorns) and not buff(thorns, player) then
+        -- Thorns (Check for all ranks)
+        if castable(thorns) and not buff(thorns, player) and not buff(467, player) and not buff(782, player) and not buff(1075, player) and not buff(8914, player) and not buff(9756, player) and not buff(9910, player) and not buff(26992, player) then
             return cast(thorns, player)
         end
 
