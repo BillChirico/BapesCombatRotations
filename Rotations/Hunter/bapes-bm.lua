@@ -87,7 +87,7 @@ do_auth()
 
 local function DrawUI()
     local frame = AceGUI:Create("Window")
-    frame:SetTitle(name " " .. version)
+    frame:SetTitle(name .. " " .. version)
     frame:EnableResize(false)
     frame:SetWidth(225)
     frame:SetHeight(140)
@@ -134,6 +134,10 @@ Routine:RegisterRoutine(function()
     end
 
     if not latencyCheck() then
+        return
+    end
+
+    if mounted() then
         return
     end
 
@@ -196,7 +200,7 @@ Routine:RegisterRoutine(function()
         end
 
         -- Rapid Fire
-        if health(target) > 50 and castable(rapidFire, player) and not buff(rapidFire, player) then
+        if health(target) > 50 and not melee() and castable(rapidFire, player) and not buff(rapidFire, player) then
             return cast(rapidFire, player)
         end
 
@@ -218,7 +222,7 @@ Routine:RegisterRoutine(function()
 
         -- END ATTACK START --
 
-        -- Rotation --
+        -- ROTATION --
 
         -- Hunter's Mark
         if not immune(target, huntersMark) and castable(huntersMark, target) and not debuff(huntersMark, target) then
@@ -237,7 +241,7 @@ Routine:RegisterRoutine(function()
                     return cast(explosiveTrap, target)
                 end
             else
-                if castable(snakeTrap, target) then
+                if snakeTrap ~= nil and castable(snakeTrap, target) then
                     return cast(snakeTrap, target)
                 end
             end
@@ -249,7 +253,7 @@ Routine:RegisterRoutine(function()
         end
 
         -- Kill Command
-        if castable(killCommand, target) then
+        if killCommand ~= nil and castable(killCommand, target) then
             return cast(killCommand, target)
         end
 
@@ -259,7 +263,7 @@ Routine:RegisterRoutine(function()
         end
 
         -- Steady Shot
-        if (spellisspell(lastspell(), autoShot) or not spellisspell(lastspell(), steadyShot)) and castable(steadyShot, target) then
+        if (spellisspell(lastspell(), autoShot) or not spellisspell(lastspell(), steadyShot)) and steadyShot ~= nil and castable(steadyShot, target) then
             return cast(steadyShot, target)
         end
 
@@ -327,10 +331,10 @@ Routine:RegisterRoutine(function()
         -- BUFFS --
 
         -- Aspect
-        if aspect == "Viper" and castable(aspectViper) and not buff(aspectViper, player) then
+        if aspect == "Viper" and aspectViper ~= nil and castable(aspectViper, player) and not buff(aspectViper, player) then
             return cast(aspectViper, player)
         else
-            if aspect == "Hawk" and castable(aspectHawk) and not buff(aspectHawk, player) then
+            if aspect == "Hawk" and aspectHawk ~= nil and castable(aspectHawk, player) and not buff(aspectHawk, player) then
                 return cast(aspectHawk, player)
             end
         end
@@ -366,7 +370,7 @@ local bapesBM_settings = {
         {
             key = "heading",
             type = "heading",
-            text = name " " .. version
+            text = name .. " " .. version
         },
         -- Healing --
         {
@@ -399,7 +403,7 @@ local bapesBM_settings = {
         -- Aspect
         {
             key = "aspect",
-            -- width = 130,
+            width = 130,
             label = "Aspect",
             type = "dropdown",
             options = {"Viper", "Hawk"}
