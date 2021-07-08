@@ -16,7 +16,7 @@ local authenticated = false
 
 -- CROMULON --
 
-Tinkr:require("scripts.cromulon.libs.Libdraw.Libs.LibStub.LibStub", UI) --! If you are loading from disk your rotaiton.
+Tinkr:require("scripts.cromulon.libs.Libdraw.Libs.LibStub.LibStub", UI)
 Tinkr:require("scripts.cromulon.libs.Libdraw.LibDraw", UI)
 Tinkr:require("scripts.cromulon.libs.AceGUI30.AceGUI30", UI)
 Tinkr:require("scripts.cromulon.libs.AceGUI30.widgets.AceGUIContainer-BlizOptionsGroup", UI)
@@ -147,7 +147,7 @@ Routine:RegisterRoutine(function()
         local healInCombat = UI.config.read('healInCombat', 'true')
         local healPercentage = UI.config.read('healPercentage', 40)
 
-        local useInnervate = UI.config.read('useInnervate', 'true')
+        local useInnervate = UI.config.read('useInnervate', 'false')
 
         local useBearForm = UI.config.read('useBearForm', 'true')
         local bearFormPercentage = UI.config.read('bearFormPercentage', 50)
@@ -336,6 +336,14 @@ Routine:RegisterRoutine(function()
         if healOutOfCombat then
             if health() <= 60 and castable(rejuvenation) and not buff(rejuvenation, player) then
                 return cast(rejuvenation, player)
+            end
+
+            if health() <= 60 and castable(regrowth) and not buff(regrowth, player) then
+                return cast(regrowth, player)
+            end
+
+            if health() <= 60 and castable(healingTouch) and not buff(healingTouch, player) then
+                return cast(healingTouch, player)
             end
         end
 
