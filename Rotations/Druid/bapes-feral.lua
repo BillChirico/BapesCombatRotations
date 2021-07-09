@@ -194,15 +194,15 @@ Routine:RegisterRoutine(function()
         -- HEALING --
 
         if healInCombat and not buff(frenziedRegeneration) then
-            if health() <= healPercentage and castable(barkSkin) then
+            if health() <= healPercentage and castable(barkSkin, player) then
                 return cast(barkSkin, player)
             end
 
-            if health() <= healPercentage and castable(rejuvenation) and not buff(rejuvenation, player) then
+            if health() <= healPercentage and castable(rejuvenation, player) and not buff(rejuvenation, player) then
                 return cast(rejuvenation, player)
             end
 
-            if health() <= healPercentage and castable(regrowth) and not buff(regrowth, player) then
+            if health() <= healPercentage and castable(regrowth, player) and not buff(regrowth, player) then
                 return cast(regrowth, player)
             end
         end
@@ -211,17 +211,17 @@ Routine:RegisterRoutine(function()
 
         -- BUFFS --
 
-        if mana <= 45 and castable(innervate) and useInnervate then
+        if mana <= 45 and castable(innervate, player) and useInnervate then
             return cast(innervate, player)
         end
 
         -- Bear Form
-        if useBearForm and health() <= bearFormPercentage and not buff(bearForm) and castable(bearForm) then
-            return cast(bearForm)
+        if useBearForm and health() <= bearFormPercentage and not buff(bearForm, player) and castable(bearForm, player) then
+            return cast(bearForm, player)
         else
             -- Cat Form
-            if not buff(catForm) and castable(catForm) and not buff(bearForm) then
-                return cast(catForm)
+            if not buff(catForm, player) and castable(catForm, player) and not buff(bearForm, player) then
+                return cast(catForm, player)
             end
         end
 
@@ -239,7 +239,7 @@ Routine:RegisterRoutine(function()
 
         if buff(catForm) then
             -- Rake
-            if not debuff(rake, target) and comboPoints < 5 and castable(rake) then
+            if not debuff(rake, target) and comboPoints < 5 and castable(rake, target) then
                 return cast(rake, target)
             end
 
@@ -269,12 +269,12 @@ Routine:RegisterRoutine(function()
 
         if buff(bearForm) then
             -- Frenzied Regeneration
-            if health() <= 35 and castable(frenziedRegeneration) then
+            if health() <= 35 and castable(frenziedRegeneration, player) then
                 return cast(frenziedRegeneration, player)
             end
 
             -- Frenzied Regeneration is still going so don't use abilities
-            if buff(frenziedRegeneration) then
+            if buff(frenziedRegeneration, player) then
                 return
             end
 
@@ -351,35 +351,35 @@ Routine:RegisterRoutine(function()
         -- BUFFS --
 
         -- MOTW (Check for GOTW & all ranks)
-        if castable(motw) and not buff(motw, player) and not buff(21849, player) and not buff(21850, player) and not buff(26991, player) and not buff(1126, player) and not buff(5232, player) and not buff(6756, player) and not buff(5234, player) and not buff(8907, player) and not buff(9884, player) and not buff(9885, player) and not buff(26990, player) then
+        if castable(motw, player) and not buff(motw, player) and not buff(21849, player) and not buff(21850, player) and not buff(26991, player) and not buff(1126, player) and not buff(5232, player) and not buff(6756, player) and not buff(5234, player) and not buff(8907, player) and not buff(9884, player) and not buff(9885, player) and not buff(26990, player) then
             return cast(motw, player)
         end
 
         -- Thorns (Check for all ranks)
-        if castable(thorns) and not buff(thorns, player) and not buff(467, player) and not buff(782, player) and not buff(1075, player) and not buff(8914, player) and not buff(9756, player) and not buff(9910, player) and not buff(26992, player) then
+        if castable(thorns, player) and not buff(thorns, player) and not buff(467, player) and not buff(782, player) and not buff(1075, player) and not buff(8914, player) and not buff(9756, player) and not buff(9910, player) and not buff(26992, player) then
             return cast(thorns, player)
         end
 
         -- Omen of Clarity
-        if castable(omenOfClarity) and not buff(omenOfClarity, player) then
+        if castable(omenOfClarity, player) and not buff(omenOfClarity, player) then
             return cast(omenOfClarity, player)
         end
 
         -- END BUFFS --
 
         -- Cat Form
-        if UnitExists(target) and alive(target) and not buff(catForm) and castable(catForm) and distance(player, target) <= math.random(25, 40) then
-            return cast(catForm)
+        if UnitExists(target) and alive(target) and not buff(catForm, player) and castable(catForm, player) and distance(player, target) <= math.random(25, 40) then
+            return cast(catForm, player)
         end
 
         -- Stealth
-        if UnitExists(target) and alive(target) and not buff(stealth, player) and castable(stealth) and distance(player, target) <= 15 then
-            return cast(stealth)
+        if UnitExists(target) and alive(target) and not buff(stealth, player) and castable(stealth, player) and distance(player, target) <= 15 then
+            return cast(stealth, player)
         end
 
         -- Dash
-        if not buff(dash) and castable(dash) then
-            return cast(dash)
+        if not buff(dash, player) and castable(dash, player) then
+            return cast(dash, player)
         end
 
         -- Pounce
