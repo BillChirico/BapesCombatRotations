@@ -1,5 +1,5 @@
 -- Created By Bapes#1111 --
--- Please do not distrubute without concent --
+-- Please do not distrubute without consent --
 
 local name = "Bapes Bear Rotation"
 local version = "v1.0"
