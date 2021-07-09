@@ -155,24 +155,23 @@ Routine:RegisterRoutine(function()
 
         -- SPELLS --
 
+        local mendPet = highestrank(136)
+
+        local rapidFire = highestrank(36828)
+        local intimidation = highestrank(19577)
+        local bestialWrath = highestrank(19574)
+
         local autoShot = highestrank(75)
         local huntersMark = highestrank(1130)
         local concussiveShot = highestrank(5116)
         local snakeTrap = highestrank(34600)
         local explosiveTrap = highestrank(13813)
         local misdirection = highestrank(34477)
-
         local raptorStrike = highestrank(32915)
         local mongooseBite = highestrank(1495)
         local steadyShot = highestrank(34120)
         local killCommand = highestrank(34026)
         local multiShot = highestrank(2643)
-
-        local rapidFire = highestrank(36828)
-        local intimidation = highestrank(19577)
-        local bestialWrath = highestrank(19574)
-
-        local mendPet = highestrank(136)
 
         -- END SPELLS --
 
@@ -241,7 +240,7 @@ Routine:RegisterRoutine(function()
                     return cast(explosiveTrap, target)
                 end
             else
-                if snakeTrap ~= nil and castable(snakeTrap, target) then
+                if castable(snakeTrap, target) then
                     return cast(snakeTrap, target)
                 end
             end
@@ -253,7 +252,7 @@ Routine:RegisterRoutine(function()
         end
 
         -- Kill Command
-        if killCommand ~= nil and castable(killCommand, target) then
+        if castable(killCommand, target) then
             return cast(killCommand, target)
         end
 
@@ -263,7 +262,7 @@ Routine:RegisterRoutine(function()
         end
 
         -- Steady Shot
-        if (spellisspell(lastspell(), autoShot) or not spellisspell(lastspell(), steadyShot)) and steadyShot ~= nil and castable(steadyShot, target) then
+        if (spellisspell(lastspell(), autoShot) or not spellisspell(lastspell(), steadyShot)) and castable(steadyShot, target) then
             return cast(steadyShot, target)
         end
 
@@ -331,10 +330,10 @@ Routine:RegisterRoutine(function()
         -- BUFFS --
 
         -- Aspect
-        if aspect == "Viper" and aspectViper ~= nil and castable(aspectViper, player) and not buff(aspectViper, player) then
+        if aspect == "Viper" and castable(aspectViper, player) and not buff(aspectViper, player) then
             return cast(aspectViper, player)
         else
-            if aspect == "Hawk" and aspectHawk ~= nil and castable(aspectHawk, player) and not buff(aspectHawk, player) then
+            if aspect == "Hawk" and castable(aspectHawk, player) and not buff(aspectHawk, player) then
                 return cast(aspectHawk, player)
             end
         end

@@ -144,13 +144,13 @@ Routine:RegisterRoutine(function()
 
         -- SETTINGS --
 
-        local healInCombat = UI.config.read('healInCombat', 'true')
-        local healPercentage = UI.config.read('healPercentage', 40)
+        local healInCombat = UI.config.read("healInCombat", "true")
+        local healPercentage = UI.config.read("healPercentage", 40)
 
-        local useInnervate = UI.config.read('useInnervate', 'false')
+        local useInnervate = UI.config.read("useInnervate", "false")
 
-        local useBearForm = UI.config.read('useBearForm', 'true')
-        local bearFormPercentage = UI.config.read('bearFormPercentage', 50)
+        local useBearForm = UI.config.read("useBearForm", "true")
+        local bearFormPercentage = UI.config.read("bearFormPercentage", 50)
 
         -- END SETTINGS --
 
@@ -350,8 +350,8 @@ Routine:RegisterRoutine(function()
 
         -- BUFFS --
 
-        -- MOTW (Check for GOTW)
-        if castable(motw) and not buff(motw, player) and not buff(21849, player) and not buff(21850, player) and not buff(26991, player) then
+        -- MOTW (Check for GOTW & all ranks)
+        if castable(motw) and not buff(motw, player) and not buff(21849, player) and not buff(21850, player) and not buff(26991, player) and not buff(1126, player) and not buff(5232, player) and not buff(6756, player) and not buff(5234, player) and not buff(8907, player) and not buff(9884, player) and not buff(9885, player) and not buff(26990, player) then
             return cast(motw, player)
         end
 
