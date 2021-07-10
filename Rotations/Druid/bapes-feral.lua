@@ -386,14 +386,14 @@ Routine:RegisterRoutine(function()
         end
 
         -- Thorns (Check for all ranks)
-        if castable(thorns, player) and not buff(thorns, player) then
+        if castable(Thorns, player) and not buff(Thorns, player) then
             for _, thornRank in pairs(thornsRanks) do
                 if buff(thornRank, player) then
                     break
                 end
             end
 
-            return cast(thorns, player)
+            return cast(Thorns, player)
         end
 
         -- Omen of Clarity

@@ -147,9 +147,10 @@ Routine:RegisterRoutine(function()
 
         -- SETTINGS --
 
-        local mendPetInCombat = UI.config.read("mendPetInCombat", "true")
-        local mendPetPercentage = UI.config.read("mendPetPercentage", 50)
-        local useTraps = UI.config.read("useTraps", "true")
+        local useHealthStone = UI.config.read("useHealthStone", "true")
+        local healthstonePercentage = UI.config.read("healthstonePercentage", 40)
+
+        local drainSoulPercentage = UI.config.read("drainSoulPercentage", 5)
 
         -- END SETTINGS --
 
@@ -162,16 +163,43 @@ Routine:RegisterRoutine(function()
         local drainLife = highestrank(689)
         local drainSoul = highestrank(1120)
 
-        -- Items
+        -- END SPELLS --
+
+        -- ITEMS --
+
+        local healthstones = {
+            19005,
+            19004,
+            5512,
+            19007,
+            19006,
+            5511,
+            19009,
+            19008,
+            19011,
+            19010,
+            5510,
+            19013,
+            19012,
+            9421,
+            22105,
+            22104,
+            22103
+        }
+
         local soulShard = 6265;
 
-        -- END SPELLS --
+        -- END ITEMS --
 
         -- HEALING --
 
         -- Healthstone
-        if health() <= 40 and itemcount(Healthstone) > 0 then
-            return useItem(Healthstone, player)
+        if health() <= healthstonePercentage and useHealthStone then
+            for _, healthstone in pairs(healthstones) do
+                if itemInBags(healthstone) then
+                    return useItem(healthstone, player)
+                end
+            end
         end
 
         -- END HEALING --
@@ -205,12 +233,12 @@ Routine:RegisterRoutine(function()
         end
 
         -- Drain Life
-        if health(target) >= 5 and not debuff(drainLife, target) and castable(drainLife, target) then
+        if health(target) > drainSoulPercentage and not debuff(drainLife, target) and castable(drainLife, target) then
             return cast(drainLife, target)
         end
 
         -- Drain Soul
-        if health(target) < 5 and itemcount(soulShard) < 5 and not debuff(drainSoul, target) and castable(drainSoul, target) then
+        if health(target) <= drainSoulPercentage and itemcount(soulShard) < 5 and not debuff(drainSoul, target) and castable(drainSoul, target) then
             return cast(drainSoul, target)
         end
 
@@ -225,7 +253,8 @@ Routine:RegisterRoutine(function()
 
         -- SETTINGS --
 
-        local aspect = UI.config.read("aspect", "Viper")
+        local useHealthStone = UI.config.read("useHealthStone", "true")
+        local useSoulstone = UI.config.read("useSoulstone", "true")
 
         -- END SETTINGS --
 
@@ -238,15 +267,44 @@ Routine:RegisterRoutine(function()
         local demonArmor = highestrank(706)
         local soulLink = highestrank(19028)
 
-        -- Items
-        local minorSoulstone = 5232
-
         -- END SPELLS --
+
+        -- ITEMS --
+
+        local healthstones = {
+            19005,
+            19004,
+            5512,
+            19007,
+            19006,
+            5511,
+            19009,
+            19008,
+            19011,
+            19010,
+            5510,
+            19013,
+            19012,
+            9421,
+            22105,
+            22104,
+            22103
+        }
+
+        local soulstones = {
+            [5232] = 20707,
+            [16892] = 20762,
+            [16895] = 20764,
+            [16896] = 20765,
+            [22116] = 27239
+        }
+
+        -- END ITEMS --
 
         -- PET --
 
         -- Summon Pet
-        if (UnitIsDeadOrGhost(pet) or not IsPetActive()) and castable(summonFelguard) then
+        if (UnitIsDeadOrGhost(pet) or not IsPetActive()) and castable(summonFelguard, player) then
             return cast(summonFelguard, player)
         end
 
@@ -255,12 +313,24 @@ Routine:RegisterRoutine(function()
         -- STONES --
 
         -- Healthstone
-        if not itemInBags(Healthstone) and castable(createHealthstone, player) then
+        if useHealthStone and castable(createHealthstone, player) then
+            for _, healthstone in pairs(healthstones) do
+                if itemInBags(healthstone) then
+                    break
+                end
+            end
+
             return cast(createHealthstone, player)
         end
 
         -- Soulstone
-        if not itemInBags(Soulstone) and castable(createSoulstone, player) then
+        if useSoulstone and castable(createSoulstone, player) then
+            for _, soulstoneItem in pairs(soulstones) do
+                if itemcount(soulstoneItem) > 0 then
+                    break
+                end
+            end
+
             return cast(createSoulstone, player)
         end
 
@@ -269,18 +339,22 @@ Routine:RegisterRoutine(function()
         -- BUFFS --
 
         -- Demon Armor
-        if castable(demonArmor) and not buff(demonArmor, player) then
+        if castable(demonArmor, player) and not buff(demonArmor, player) then
             return cast(demonArmor, player)
         end
 
         -- Soul Link
-        if castable(soulLink) and not buff(soulLink, player) then
+        if castable(soulLink, player) and not buff(soulLink, player) then
             return cast(soulLink, player)
         end
 
         -- Soulstone
-        if itemcount(minorSoulstone) > 0 and not buff(20707, player) and castable(20707, player) then
-            return useItem(minorSoulstone, player)
+        if useSoulstone then
+            for soulstoneBuff, soulstoneItem in pairs(soulstones) do
+                if itemcount(soulstoneItem) > 0 and not buff(soulstoneBuff, player) and castable(soulstoneBuff, player) then
+                    return useItem(soulstoneItem, player)
+                end
+            end
         end
 
         -- END BUFFS --
@@ -322,18 +396,18 @@ local bapesDemo_settings = {
             type = "heading",
             text = "Healing"
         },
-        -- Mend Pet in Combat
+        -- Healthstone
         {
-            key = "mendPetInCombat",
+            key = "useHealthStone",
             type = "checkbox",
-            text = "Mend Pet in Combat"
+            text = "Use Healthstone"
         },
-        -- Mend Pet Percentage
+        -- Healthstone Percentage
         {
-            key = "mendPetPercentage",
+            key = "healthstonePercentage",
             type = "slider",
-            text = "Mend Pet Percentage",
-            label = "Mend Pet %",
+            text = "Healthstone Percentage",
+            label = "Healthstone %",
             min = 5,
             max = 95,
             step = 5
@@ -344,13 +418,11 @@ local bapesDemo_settings = {
             type = "heading",
             text = "Buffs"
         },
-        -- Aspect
+        -- Soulstone
         {
-            key = "aspect",
-            width = 130,
-            label = "Aspect",
-            type = "dropdown",
-            options = {"Viper", "Hawk"}
+            key = "useSoulstone",
+            type = "checkbox",
+            text = "Use Soulstone"
         },
         -- Combat Options --
         {
@@ -360,9 +432,13 @@ local bapesDemo_settings = {
         },
         -- Use Traps
         {
-            key = "useTraps",
-            type = "checkbox",
-            text = "Use Traps"
+            key = "drainSoulPercentage",
+            type = "slider",
+            text = "Drain Soul Percentage",
+            label = "Drain Soul %",
+            min = 5,
+            max = 95,
+            step = 5
         }
     }
 }
