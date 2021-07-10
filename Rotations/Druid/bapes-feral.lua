@@ -120,7 +120,7 @@ DrawUI()
 -- END LICENSE UI --
 
 -- Print name and version
-print("|cFFFFD700[Bapes Scripts]|CFF959697 " .. name .. " " .. version)
+print("|cFFFFD700[Bapes Scripts]|cFF8A2BE2 " .. name .. " " .. version)
 
 Routine:RegisterRoutine(function()
     -- Check to make sure the user is authenticated
@@ -328,6 +328,30 @@ Routine:RegisterRoutine(function()
         local dash = highestrank(1850)
         local pounce = highestrank(9005)
 
+        -- MOTW Ranks
+        local motwRanks = {
+            21849,
+            21850,
+            26991,
+            1126,
+            5232,
+            8907,
+            9884,
+            9885,
+            26990
+        }
+
+        -- Thorns Ranks
+        local thornsRanks = {
+            467,
+            782,
+            1075,
+            8914,
+            9756,
+            9910,
+            26992
+        }
+
         -- END SPELLS --
 
         -- HEALING --
@@ -351,12 +375,24 @@ Routine:RegisterRoutine(function()
         -- BUFFS --
 
         -- MOTW (Check for GOTW & all ranks)
-        if castable(motw, player) and not buff(motw, player) and not buff(21849, player) and not buff(21850, player) and not buff(26991, player) and not buff(1126, player) and not buff(5232, player) and not buff(6756, player) and not buff(5234, player) and not buff(8907, player) and not buff(9884, player) and not buff(9885, player) and not buff(26990, player) then
+        if castable(motw, player) and not buff(motw, player) then
+            for _, motwRank in pairs(motwRanks) do
+                if buff(motwRank, player) then
+                    break
+                end
+            end
+
             return cast(motw, player)
         end
 
         -- Thorns (Check for all ranks)
-        if castable(thorns, player) and not buff(thorns, player) and not buff(467, player) and not buff(782, player) and not buff(1075, player) and not buff(8914, player) and not buff(9756, player) and not buff(9910, player) and not buff(26992, player) then
+        if castable(thorns, player) and not buff(thorns, player) then
+            for _, thornRank in pairs(thornsRanks) do
+                if buff(thornRank, player) then
+                    break
+                end
+            end
+
             return cast(thorns, player)
         end
 
@@ -403,7 +439,7 @@ local bapesFeral_settings = {
     key = "bapes_feral_config",
     title = "Bapes Scripts",
     width = 400,
-    height = 300,
+    height = 400,
     color = "F58CBA",
     resize = false,
     show = false,

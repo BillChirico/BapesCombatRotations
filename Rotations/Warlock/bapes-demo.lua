@@ -121,7 +121,7 @@ DrawUI()
 -- END LICENSE UI --
 
 -- Print name and version
-print("|cFFFFD700[Bapes Scripts]|CFF959697 " .. name .. " " .. version)
+print("|cFFFFD700[Bapes Scripts]|cFF8A2BE2 " .. name .. " " .. version)
 
 Routine:RegisterRoutine(function()
     -- Check to make sure the user is authenticated
@@ -299,7 +299,7 @@ Routine:RegisterRoutine(function()
         return
     end
 
-end, Routine.Classes.Hunter, "bapes-demo")
+end, Routine.Classes.Warlock, "bapes-demo")
 Routine:LoadRoutine("bapes-demo")
 
 local bapesDemo_settings = {

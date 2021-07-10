@@ -121,7 +121,7 @@ DrawUI()
 -- END LICENSE UI --
 
 -- Print name and version
-print("|cFFFFD700[Bapes Scripts]|CFF959697 " .. name .. " " .. version)
+print("|cFFFFD700[Bapes Scripts]|cFF8A2BE2 " .. name .. " " .. version)
 
 Routine:RegisterRoutine(function()
     -- Check to make sure the user is authenticated
