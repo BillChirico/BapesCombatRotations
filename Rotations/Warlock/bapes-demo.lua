@@ -150,6 +150,7 @@ Routine:RegisterRoutine(function()
         local useHealthStone = UI.config.read("useHealthStone", "true")
         local healthstonePercentage = UI.config.read("healthstonePercentage", 40)
 
+        local useWand = UI.config.read("useWand", "true")
         local drainSoulPercentage = UI.config.read("drainSoulPercentage", 5)
 
         -- END SETTINGS --
@@ -196,7 +197,7 @@ Routine:RegisterRoutine(function()
         -- Healthstone
         if health() <= healthstonePercentage and useHealthStone then
             for _, healthstone in pairs(healthstones) do
-                if itemInBags(healthstone) then
+                if itemInBags(healthstone) and usable(healthstone) then
                     return useItem(healthstone, player)
                 end
             end
@@ -210,7 +211,7 @@ Routine:RegisterRoutine(function()
 
         -- ATTACK START --
 
-        if castable(wand, target) and not IsAutoRepeatSpell(wand) then
+        if useWand and castable(wand, target) and not IsAutoRepeatSpell(wand) then
             return cast(wand, target)
         end
 
@@ -326,7 +327,7 @@ Routine:RegisterRoutine(function()
         -- Soulstone
         if useSoulstone and castable(createSoulstone, player) then
             for _, soulstoneItem in pairs(soulstones) do
-                if itemcount(soulstoneItem) > 0 then
+                if itemInBags(soulstoneItem) then
                     break
                 end
             end
@@ -351,7 +352,7 @@ Routine:RegisterRoutine(function()
         -- Soulstone
         if useSoulstone then
             for soulstoneBuff, soulstoneItem in pairs(soulstones) do
-                if itemcount(soulstoneItem) > 0 and not buff(soulstoneBuff, player) and castable(soulstoneBuff, player) then
+                if itemInBags(soulstoneItem) and not buff(soulstoneBuff, player) and usable(soulstoneItem) then
                     return useItem(soulstoneItem, player)
                 end
             end
@@ -360,7 +361,7 @@ Routine:RegisterRoutine(function()
         -- END BUFFS --
 
         -- Pet Attack
-        if UnitExists(target) and alive(target) and distance(player, target) <= math.random(35, 45) then
+        if UnitExists(target) and alive(target) and distance(player, target) <= math.random(30, 40) then
             Eval("PetAttack()", "t")
         end
     end
@@ -430,7 +431,13 @@ local bapesDemo_settings = {
             type = "heading",
             text = "Combat Options"
         },
-        -- Use Traps
+        -- Wand
+        {
+            key = "useWand",
+            type = "checkbox",
+            text = "Use Wand"
+        },
+        -- Drain Soul Percentage
         {
             key = "drainSoulPercentage",
             type = "slider",
