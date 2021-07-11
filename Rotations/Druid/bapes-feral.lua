@@ -220,7 +220,7 @@ Routine:RegisterRoutine(function()
             return cast(bearForm, player)
         else
             -- Cat Form
-            if not buff(catForm, player) and castable(catForm, player) and not buff(bearForm, player) then
+            if not buff(catForm, player) and castable(catForm, player) then
                 return cast(catForm, player)
             end
         end
@@ -357,15 +357,15 @@ Routine:RegisterRoutine(function()
         -- HEALING --
 
         if healOutOfCombat then
-            if health() <= 60 and castable(rejuvenation) and not buff(rejuvenation, player) then
+            if health() <= healPercentage and castable(rejuvenation) and not buff(rejuvenation, player) then
                 return cast(rejuvenation, player)
             end
 
-            if health() <= 60 and castable(regrowth) and not buff(regrowth, player) then
+            if health() <= healPercentage and castable(regrowth) and not buff(regrowth, player) then
                 return cast(regrowth, player)
             end
 
-            if health() <= 60 and castable(healingTouch) and not buff(healingTouch, player) then
+            if health() <= healPercentage and castable(healingTouch) and not buff(healingTouch, player) then
                 return cast(healingTouch, player)
             end
         end
@@ -375,14 +375,14 @@ Routine:RegisterRoutine(function()
         -- BUFFS --
 
         -- MOTW (Check for GOTW & all ranks)
-        if castable(motw, player) and not buff(motw, player) then
+        if castable(MarkOfTheWild, player) and not buff(MarkOfTheWild, player) then
             for _, motwRank in pairs(motwRanks) do
                 if buff(motwRank, player) then
                     break
                 end
             end
 
-            return cast(motw, player)
+            return cast(MarkOfTheWild, player)
         end
 
         -- Thorns (Check for all ranks)
