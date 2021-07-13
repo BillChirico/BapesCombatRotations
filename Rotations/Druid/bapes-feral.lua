@@ -2,7 +2,7 @@
 -- Please do not distrubute without consent --
 
 local name = "Bapes Feral Rotation"
-local version = "v1.1"
+local version = "v1.2"
 local Tinkr = ...
 local Routine = Tinkr.Routine
 local AceGUI = Tinkr.Util.AceGUI
@@ -78,7 +78,7 @@ local function do_auth()
     end)
 end
 
-do_auth()
+-- do_auth()
 
 -- END AUTH --
 
@@ -115,7 +115,7 @@ local function DrawUI()
     frame:AddChild(buttonGroup)
 end
 
-DrawUI()
+-- DrawUI()
 
 -- END LICENSE UI --
 
@@ -124,9 +124,9 @@ print("|cFFFFD700[Bapes Scripts]|cFF8A2BE2 " .. name .. " " .. version)
 
 Routine:RegisterRoutine(function()
     -- Check to make sure the user is authenticated
-    if not authenticated then
-        return
-    end
+    -- if not authenticated then
+    --     return
+    -- end
 
     if gcd() > latency() then
         return
@@ -183,6 +183,7 @@ Routine:RegisterRoutine(function()
         local lacerate = highestrank(33745)
         local maul = highestrank(6807)
         local bearMangle = highestrank(33878)
+        local bash = highestrank(5211)
 
         -- END SPELLS --
 
@@ -278,6 +279,11 @@ Routine:RegisterRoutine(function()
                 return
             end
 
+            -- Bash
+            if castable(bash, target) then
+                return cast (bash, target)
+            end
+
             if rage < 75 then
                 -- Lacerate
                 if castable(lacerate, target) then
@@ -309,6 +315,7 @@ Routine:RegisterRoutine(function()
         -- SETTINGS --
 
         local healOutOfCombat = UI.config.read("healOutOfCombat", "true")
+        local healPercentage = UI.config.read("healPercentage", 40)
 
         -- END SETTINGS --
 
