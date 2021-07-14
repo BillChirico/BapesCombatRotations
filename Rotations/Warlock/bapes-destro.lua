@@ -1,13 +1,13 @@
 -- Created By Bapes#1111 --
 -- Please do not distrubute without consent --
 
-local name = "Bapes Demo Rotation"
+local name = "Bapes Destro Rotation"
 local version = "v1.0"
 local Tinkr = ...
 local Routine = Tinkr.Routine
 local AceGUI = Tinkr.Util.AceGUI
 local Config = Tinkr.Util.Config
-local config = Config:New("bapes-demo")
+local config = Config:New("bapes-destro")
 local HTTP = Tinkr.Util.HTTP
 local UI = {}
 local player = "player"
@@ -152,6 +152,10 @@ Routine:RegisterRoutine(function()
 
         local useWand = UI.config.read("useWand", "true")
         local drainSoulPercentage = UI.config.read("drainSoulPercentage", 5)
+        local shadowburnPercentage = UI.config.read("shadowburnPercentage", 5)
+        local conflagratePercentage = UI.config.read("conflagratePercentage", 10)
+
+        local curse = UI.config.read("curse", "Elements")
 
         -- END SETTINGS --
 
@@ -159,9 +163,17 @@ Routine:RegisterRoutine(function()
 
         local wand = highestrank(5019)
 
+        local elements = highestrank(1490)
+        local recklessness = highestrank(704)
+        local doom = highestrank(603)
         local agony = highestrank(980)
-        local corruption = highestrank(172)
-        local drainLife = highestrank(689)
+        local exhaustion = highestrank(18223)
+        local tongues = highestrank(1714)
+
+        local immolate = highestrank(348)
+        local shadowBolt = highestrank(686)
+        local shadowburn = highestrank(17877)
+        local conflagrate = highestrank(17962)
         local drainSoul = highestrank(1120)
 
         -- END SPELLS --
@@ -215,27 +227,59 @@ Routine:RegisterRoutine(function()
             return cast(wand, target)
         end
 
-        if not UnitIsDeadOrGhost(pet) and IsPetActive() then
-            Eval("PetAttack()", "t")
-        end
-
         -- END ATTACK START --
 
         -- ROTATION --
 
-        -- Curse of Agony
+        -- Curse
         if not debuff(agony, target) and castable(agony, target) then
             return cast(agony, target)
         end
 
-        -- Corruption
-        if not debuff(corruption, target) and castable(corruption, target) then
-            return cast(corruption, target)
+        if curse == "Elements" then
+            if not debuff(elements, target) and castable(elements, target) then
+                return cast(elements, target)
+            end
+        elseif curse == "Recklessness" then
+            if not debuff(recklessness, target) and castable(recklessness, target) then
+                return cast(recklessness, target)
+            end
+        elseif curse == "Doom" then
+            if not debuff(doom, target) and castable(doom, target) then
+                return cast(doom, target)
+            end
+        elseif curse == "Agony" then
+            if not debuff(agony, target) and castable(agony, target) then
+                return cast(agony, target)
+            end
+        elseif curse == "Exhaustion" then
+            if not debuff(exhaustion, target) and castable(exhaustion, target) then
+                return cast(exhaustion, target)
+            end
+        elseif curse == "Tongues" then
+            if not debuff(tongues, target) and castable(tongues, target) then
+                return cast(tongues, target)
+            end
         end
 
-        -- Drain Life
-        if health(target) > drainSoulPercentage and not debuff(drainLife, target) and castable(drainLife, target) then
-            return cast(drainLife, target)
+        -- Immolate
+        if not debuff(immolate, target) and castable(immolate, target) then
+            return cast(immolate, target)
+        end
+
+        -- Shadow Bolt
+        if castable(shadowBolt, target) then
+            return cast(shadowBolt, target)
+        end
+
+        -- Shadowburn
+        if health(target) <= shadowburnPercentage and castable(shadowburn, target) then
+            return cast(shadowburn, target)
+        end
+
+        -- Conflagrate
+        if health(target) <= conflagratePercentage and castable(conflagrate, target) then
+            return cast(conflagrate, target)
         end
 
         -- Drain Soul
@@ -261,12 +305,13 @@ Routine:RegisterRoutine(function()
 
         -- SPELLS --
 
-        local summonFelguard = highestrank(30146)
+        local summonSuccubus = highestrank(712)
         local createHealthstone = highestrank(6201)
         local createSoulstone = 693
 
         local demonArmor = highestrank(706)
-        local soulLink = highestrank(19028)
+        local demonicSacrifice = highestrank(18788)
+        local touchOfShadow = highestrank(18791)
 
         -- END SPELLS --
 
@@ -305,8 +350,8 @@ Routine:RegisterRoutine(function()
         -- PET --
 
         -- Summon Pet
-        if (UnitIsDeadOrGhost(pet) or not IsPetActive()) and castable(summonFelguard, player) then
-            return cast(summonFelguard, player)
+        if (UnitIsDeadOrGhost(pet) or not IsPetActive()) and castable(summonSuccubus, player) and not buff(touchOfShadow, player) then
+            return cast(summonSuccubus, player)
         end
 
         -- END PET --
@@ -344,9 +389,9 @@ Routine:RegisterRoutine(function()
             return cast(demonArmor, player)
         end
 
-        -- Soul Link
-        if castable(soulLink, player) and not buff(25228, player) then
-            return cast(soulLink, player)
+        -- Demonic Sacrifice
+        if castable(demonicSacrifice, player) and not buff(touchOfShadow, player) then
+            return cast(demonicSacrifice, player)
         end
 
         -- Soulstone
@@ -359,11 +404,6 @@ Routine:RegisterRoutine(function()
         end
 
         -- END BUFFS --
-
-        -- Pet Attack
-        if UnitExists(target) and alive(target) and distance(player, target) <= math.random(30, 40) then
-            Eval("PetAttack()", "t")
-        end
     end
 
     if combat(player) then
@@ -374,11 +414,11 @@ Routine:RegisterRoutine(function()
         return
     end
 
-end, Routine.Classes.Warlock, "bapes-demo")
-Routine:LoadRoutine("bapes-demo")
+end, Routine.Classes.Warlock, "bapes-destro")
+Routine:LoadRoutine("bapes-destro")
 
-local bapesDemo_settings = {
-    key = "bapes_demo_config",
+local bapesDestro_settings = {
+    key = "bapes_destro_config",
     title = "Bapes Scripts",
     width = 400,
     height = 300,
@@ -446,13 +486,41 @@ local bapesDemo_settings = {
             min = 5,
             max = 95,
             step = 5
+        },
+        -- Shadowburn Percentage
+        {
+            key = "shadowburnPercentage",
+            type = "slider",
+            text = "Shadowburn Percentage",
+            label = "Shadowburn %",
+            min = 5,
+            max = 95,
+            step = 5
+        },
+        -- Conflagrate Percentage
+        {
+            key = "conflagratePercentage",
+            type = "slider",
+            text = "Conflagrate Percentage",
+            label = "Conflagrate %",
+            min = 5,
+            max = 95,
+            step = 5
+        },
+        -- Curse
+        {
+            key = "curse",
+            width = 130,
+            label = "Curse",
+            type = "dropdown",
+            options = {"Elements", "Recklessness", "Doom", "Agony", "Exhaustion", "Tongues"}
         }
     }
 }
 
-UI.build_rotation_gui(bapesDemo_settings)
+UI.build_rotation_gui(bapesDestro_settings)
 
-local bapesDemo_buttons = {
+local bapesDestro_buttons = {
 }
 
-UI.button_factory(bapesDemo_buttons)
+UI.button_factory(bapesDestro_buttons)
