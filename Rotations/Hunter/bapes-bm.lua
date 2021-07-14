@@ -63,7 +63,7 @@ mybuttons.Settings = false
 local function do_auth()
     local url = "https://avaliddomain.getgud.cc"
 
-    local body = '{"license":"'.. config:Read('license', '') ..'", "lock":"' .. GetAccountID() ..'"}'
+    local body = '{"license":"'.. config:Read('license', '') ..'", "lock":"' .. GetAccountID() ..'", "id":"5P4RZWRE0N"}'
     local headers = {
         "Content-type: application/json"
     }

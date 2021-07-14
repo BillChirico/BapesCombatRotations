@@ -2,7 +2,7 @@
 -- Please do not distrubute without consent --
 
 local name = "Bapes Destro Rotation"
-local version = "v1.0"
+local version = "v1.0-beta"
 local Tinkr = ...
 local Routine = Tinkr.Routine
 local AceGUI = Tinkr.Util.AceGUI
@@ -79,7 +79,7 @@ local function do_auth()
     end)
 end
 
-do_auth()
+-- do_auth()
 
 -- END AUTH --
 
@@ -116,7 +116,7 @@ local function DrawUI()
     frame:AddChild(buttonGroup)
 end
 
-DrawUI()
+-- DrawUI()
 
 -- END LICENSE UI --
 
@@ -125,9 +125,9 @@ print("|cFFFFD700[Bapes Scripts]|cFF8A2BE2 " .. name .. " " .. version)
 
 Routine:RegisterRoutine(function()
     -- Check to make sure the user is authenticated
-    if not authenticated then
-        return
-    end
+    -- if not authenticated then
+    --     return
+    -- end
 
     if gcd() > latency() then
         return
