@@ -63,7 +63,7 @@ mybuttons.Settings = false
 local function do_auth()
     local url = "https://avaliddomain.getgud.cc"
 
-    local body = '{"license":"'.. config:Read('license', '') ..'", "lock":"' .. GetAccountID() ..'"}'
+    local body = '{"license":"'.. config:Read('license', '') ..'", "lock":"' .. GetAccountID() ..'", "id":"RGEFNNSNNS"}'
     local headers = {
         "Content-type: application/json"
     }
@@ -79,7 +79,7 @@ local function do_auth()
     end)
 end
 
--- do_auth()
+do_auth()
 
 -- END AUTH --
 
@@ -116,7 +116,7 @@ local function DrawUI()
     frame:AddChild(buttonGroup)
 end
 
--- DrawUI()
+DrawUI()
 
 -- END LICENSE UI --
 
@@ -125,9 +125,9 @@ print("|cFFFFD700[Bapes Scripts]|cFF8A2BE2 " .. name .. " " .. version)
 
 Routine:RegisterRoutine(function()
     -- Check to make sure the user is authenticated
-    -- if not authenticated then
-    --     return
-    -- end
+    if not authenticated then
+        return
+    end
 
     if gcd() > latency() then
         return
