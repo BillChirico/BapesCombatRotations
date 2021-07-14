@@ -307,7 +307,7 @@ Routine:RegisterRoutine(function()
 
         local summonSuccubus = highestrank(712)
         local createHealthstone = highestrank(6201)
-        local createSoulstone = 693
+        local createSoulstone = highestrank(693)
 
         local demonArmor = highestrank(706)
         local demonicSacrifice = highestrank(18788)

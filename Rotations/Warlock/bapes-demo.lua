@@ -263,7 +263,7 @@ Routine:RegisterRoutine(function()
 
         local summonFelguard = highestrank(30146)
         local createHealthstone = highestrank(6201)
-        local createSoulstone = 693
+        local createSoulstone = highestrank(693)
 
         local demonArmor = highestrank(706)
         local soulLink = highestrank(19028)
