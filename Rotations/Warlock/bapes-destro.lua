@@ -232,10 +232,6 @@ Routine:RegisterRoutine(function()
         -- ROTATION --
 
         -- Curse
-        if not debuff(agony, target) and castable(agony, target) then
-            return cast(agony, target)
-        end
-
         if curse == "Elements" then
             if not debuff(elements, target) and castable(elements, target) then
                 return cast(elements, target)
@@ -262,16 +258,6 @@ Routine:RegisterRoutine(function()
             end
         end
 
-        -- Immolate
-        if not debuff(immolate, target) and castable(immolate, target) then
-            return cast(immolate, target)
-        end
-
-        -- Shadow Bolt
-        if castable(shadowBolt, target) then
-            return cast(shadowBolt, target)
-        end
-
         -- Shadowburn
         if health(target) <= shadowburnPercentage and castable(shadowburn, target) then
             return cast(shadowburn, target)
@@ -285,6 +271,16 @@ Routine:RegisterRoutine(function()
         -- Drain Soul
         if health(target) <= drainSoulPercentage and itemcount(soulShard) < 5 and not debuff(drainSoul, target) and castable(drainSoul, target) then
             return cast(drainSoul, target)
+        end
+
+        -- Immolate
+        if not debuff(immolate, target) and castable(immolate, target) then
+            return cast(immolate, target)
+        end
+
+        -- Shadow Bolt
+        if castable(shadowBolt, target) then
+            return cast(shadowBolt, target)
         end
 
         -- END ROTATION --

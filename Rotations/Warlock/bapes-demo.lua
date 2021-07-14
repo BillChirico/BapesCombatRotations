@@ -224,12 +224,12 @@ Routine:RegisterRoutine(function()
         -- ROTATION --
 
         -- Curse of Agony
-        if not debuff(agony, target) and castable(agony, target) then
+        if health(target) > drainSoulPercentage and not debuff(agony, target) and castable(agony, target) then
             return cast(agony, target)
         end
 
         -- Corruption
-        if not debuff(corruption, target) and castable(corruption, target) then
+        if health(target) > drainSoulPercentage and not debuff(corruption, target) and castable(corruption, target) then
             return cast(corruption, target)
         end
 
