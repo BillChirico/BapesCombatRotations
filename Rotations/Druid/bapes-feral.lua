@@ -78,7 +78,7 @@ local function do_auth()
     end)
 end
 
--- do_auth()
+do_auth()
 
 -- END AUTH --
 
@@ -115,7 +115,7 @@ local function DrawUI()
     frame:AddChild(buttonGroup)
 end
 
--- DrawUI()
+DrawUI()
 
 -- END LICENSE UI --
 
@@ -124,9 +124,9 @@ print("|cFFFFD700[Bapes Scripts]|cFF8A2BE2 " .. name .. " " .. version)
 
 Routine:RegisterRoutine(function()
     -- Check to make sure the user is authenticated
-    -- if not authenticated then
-    --     return
-    -- end
+    if not authenticated then
+        return
+    end
 
     if gcd() > latency() then
         return
@@ -184,6 +184,7 @@ Routine:RegisterRoutine(function()
         local maul = highestrank(6807)
         local bearMangle = highestrank(33878)
         local bash = highestrank(5211)
+        local feralCharge = highestrank(16979)
 
         -- END SPELLS --
 
@@ -238,7 +239,7 @@ Routine:RegisterRoutine(function()
 
         -- CAT ROTATION --
 
-        if buff(catForm) then
+        if buff(catForm, player) then
             -- Rake
             if not debuff(rake, target) and comboPoints < 5 and castable(rake, target) then
                 return cast(rake, target)
@@ -268,7 +269,7 @@ Routine:RegisterRoutine(function()
 
         -- BEAR ROTATION --
 
-        if buff(bearForm) then
+        if buff(bearForm, player) then
             -- Frenzied Regeneration
             if health() <= 35 and castable(frenziedRegeneration, player) then
                 return cast(frenziedRegeneration, player)
@@ -279,9 +280,14 @@ Routine:RegisterRoutine(function()
                 return
             end
 
+            -- Feral Charge
+            if UnitExists(target) and spellInRange(feralCharge) and castable(feralCharge, target) then
+                return cast(feralCharge, target)
+            end
+
             -- Bash
             if castable(bash, target) then
-                return cast (bash, target)
+                return cast(bash, target)
             end
 
             if rage < 75 then
@@ -327,8 +333,6 @@ Routine:RegisterRoutine(function()
         local rejuvenation = highestrank(774)
         local healingTouch = highestrank(5185)
 
-        local motw = highestrank(1126)
-        local thorns = highestrank(467)
         local omenOfClarity = highestrank(16864)
 
         local stealth = highestrank(5215)
@@ -382,7 +386,7 @@ Routine:RegisterRoutine(function()
         -- BUFFS --
 
         -- MOTW (Check for GOTW & all ranks)
-        if castable(MarkOfTheWild, player) and not buff(MarkOfTheWild, player) then
+        if castable(MarkOfTheWild, player) and not buff(MarkOfTheWild, player) and not buff(GiftOfTheWild, player) then
             for _, motwRank in pairs(motwRanks) do
                 if buff(motwRank, player) then
                     break

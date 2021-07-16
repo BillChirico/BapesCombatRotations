@@ -149,6 +149,7 @@ Routine:RegisterRoutine(function()
 
         local useHealthStone = UI.config.read("useHealthStone", "true")
         local healthstonePercentage = UI.config.read("healthstonePercentage", 40)
+        local lifeTapPercentage = UI.config.read("lifeTapPercentage", 30)
 
         local useWand = UI.config.read("useWand", "true")
         local drainSoulPercentage = UI.config.read("drainSoulPercentage", 5)
@@ -160,6 +161,8 @@ Routine:RegisterRoutine(function()
         -- END SETTINGS --
 
         -- SPELLS --
+
+        local lifeTap = highestrank(1454)
 
         local wand = highestrank(5019)
 
@@ -213,6 +216,11 @@ Routine:RegisterRoutine(function()
                     return useItem(healthstone, player)
                 end
             end
+        end
+
+        -- Life Tap
+        if mana <= lifeTapPercentage and castable(lifeTap, player) then
+            return cast(lifeTap, player)
         end
 
         -- END HEALING --
@@ -305,9 +313,9 @@ Routine:RegisterRoutine(function()
         local createHealthstone = highestrank(6201)
         local createSoulstone = highestrank(693)
 
-        local demonArmor = highestrank(706)
+        local felArmor = highestrank(28176)
         local demonicSacrifice = highestrank(18788)
-        local touchOfShadow = highestrank(18791)
+        local touchOfShadow = 18791
 
         -- END SPELLS --
 
@@ -346,7 +354,7 @@ Routine:RegisterRoutine(function()
         -- PET --
 
         -- Summon Pet
-        if (UnitIsDeadOrGhost(pet) or not IsPetActive()) and castable(summonSuccubus, player) and not buff(touchOfShadow, player) then
+        if castable(summonSuccubus, player) and not exists(pet) and not buff(touchOfShadow, player) then
             return cast(summonSuccubus, player)
         end
 
@@ -380,9 +388,9 @@ Routine:RegisterRoutine(function()
 
         -- BUFFS --
 
-        -- Demon Armor
-        if castable(demonArmor, player) and not buff(demonArmor, player) then
-            return cast(demonArmor, player)
+        -- Fel Armor
+        if castable(felArmor, player) and not buff(felArmor, player) then
+            return cast(felArmor, player)
         end
 
         -- Demonic Sacrifice
@@ -445,6 +453,16 @@ local bapesDestro_settings = {
             type = "slider",
             text = "Healthstone Percentage",
             label = "Healthstone %",
+            min = 5,
+            max = 95,
+            step = 5
+        },
+        -- Life Tap Percentage
+        {
+            key = "lifeTapPercentage",
+            type = "slider",
+            text = "Life Tap Percentage",
+            label = "Life Tap %",
             min = 5,
             max = 95,
             step = 5
