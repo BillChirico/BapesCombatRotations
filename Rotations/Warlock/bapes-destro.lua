@@ -2,7 +2,7 @@
 -- Please do not distrubute without consent --
 
 local name = "Bapes Destro Rotation"
-local version = "v1.0-beta"
+local version = "v1.1-beta"
 local Tinkr = ...
 local Routine = Tinkr.Routine
 local AceGUI = Tinkr.Util.AceGUI
@@ -152,6 +152,7 @@ Routine:RegisterRoutine(function()
         local lifeTapPercentage = UI.config.read("lifeTapPercentage", 30)
 
         local useWand = UI.config.read("useWand", "true")
+        local useCorruption = UI.config.read("useCorruption", "true")
         local drainSoulPercentage = UI.config.read("drainSoulPercentage", 5)
         local shadowburnPercentage = UI.config.read("shadowburnPercentage", 5)
         local conflagratePercentage = UI.config.read("conflagratePercentage", 10)
@@ -174,6 +175,7 @@ Routine:RegisterRoutine(function()
         local tongues = highestrank(1714)
 
         local immolate = highestrank(348)
+        local corruption = highestrank(172)
         local shadowBolt = highestrank(686)
         local shadowburn = highestrank(17877)
         local conflagrate = highestrank(17962)
@@ -284,6 +286,11 @@ Routine:RegisterRoutine(function()
         -- Immolate
         if not debuff(immolate, target) and castable(immolate, target) then
             return cast(immolate, target)
+        end
+
+        -- Corruption
+        if useCorruption and not debuff(corruption, target) and castable(corruption, target) then
+            return cast(corruption, target)
         end
 
         -- Shadow Bolt
@@ -490,6 +497,12 @@ local bapesDestro_settings = {
             key = "useWand",
             type = "checkbox",
             text = "Use Wand"
+    },
+        -- Corruption
+        {
+            key = "useCorruption",
+            type = "checkbox",
+            text = "Use Corruption"
         },
         -- Drain Soul Percentage
         {
