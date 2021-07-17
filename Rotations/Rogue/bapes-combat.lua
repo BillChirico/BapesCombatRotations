@@ -2,7 +2,7 @@
 -- Please do not distrubute without consent --
 
 local name = "Bapes Combat Rogue Rotation"
-local version = "v1.2"
+local version = "v1.0-beta"
 local Tinkr = ...
 local Routine = Tinkr.Routine
 local AceGUI = Tinkr.Util.AceGUI
@@ -154,11 +154,11 @@ Routine:RegisterRoutine(function()
 
         local sliceAndDice = highestrank(5171)
         local rupture = highestrank(1943)
-        local garrote = highestrank(703)
         local sinisterStrike = highestrank(1752)
 
         local eviscerate = highestrank(2098)
         local envenom = highestrank(32645)
+        local shive = highestrank(5938)
 
         -- END SPELLS --
 
@@ -195,6 +195,10 @@ Routine:RegisterRoutine(function()
 
         -- ROTATION --
 
+        if comboPoints > 0   and castable(sliceAndDice, player) and not buff(sliceAndDice, player) then
+
+        end
+
 
 
         -- END ROTATION --
@@ -213,6 +217,9 @@ Routine:RegisterRoutine(function()
 
         -- SPELLS --
 
+        local garrote = highestrank(703)
+        local stealth = highestrank(1784)
+
 
         -- END SPELLS --
 
@@ -227,7 +234,7 @@ Routine:RegisterRoutine(function()
         -- END BUFFS --
 
         -- Stealth
-        if UnitExists(target) and alive(target) and not buff(stealth, player) and castable(stealth, player) and distance(player, target) <= 15 then
+        if UnitExists(target) and alive(target) and not buff(stealth, player) and castable(stealth, player) and distance(player, target) <= math.random(12, 17) then
             return cast(stealth, player)
         end
 
@@ -236,7 +243,7 @@ Routine:RegisterRoutine(function()
             return cast(dash, player)
         end
 
-        -- Pounce
+        -- Garrote
         if UnitExists(target) and spellInRange(pounce) and castable(pounce) then
             return cast(pounce, target)
         end

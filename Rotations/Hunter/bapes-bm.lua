@@ -261,7 +261,7 @@ Routine:RegisterRoutine(function()
             return cast(multiShot, target)
         end
 
-        -- Steady Shot
+        -- Steady Shot 
         if (spellisspell(lastspell(), autoShot) or not spellisspell(lastspell(), steadyShot)) and castable(steadyShot, target) then
             return cast(steadyShot, target)
         end
