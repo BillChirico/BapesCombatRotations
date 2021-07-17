@@ -217,8 +217,10 @@ Routine:RegisterRoutine(function()
 
         -- SPELLS --
 
-        local garrote = highestrank(703)
         local stealth = highestrank(1784)
+        local sprint = highestrank(2983)
+        local garrote = highestrank(703)
+
 
 
         -- END SPELLS --
@@ -238,14 +240,14 @@ Routine:RegisterRoutine(function()
             return cast(stealth, player)
         end
 
-        -- Dash
-        if not buff(dash, player) and castable(dash, player) then
-            return cast(dash, player)
+        -- Sprint
+        if not buff(sprint, player) and castable(sprint, player) then
+            return cast(sprint, player)
         end
 
         -- Garrote
-        if UnitExists(target) and spellInRange(pounce) and castable(pounce) then
-            return cast(pounce, target)
+        if UnitExists(garrote) and spellInRange(garrote) and castable(garrote) then
+            return cast(garrote, target)
         end
     end
 

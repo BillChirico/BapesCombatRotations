@@ -2,7 +2,7 @@
 -- Please do not distrubute without consent --
 
 local name = "Bapes BM Rotation"
-local version = "v1.0"
+local version = "v1.1"
 local Tinkr = ...
 local Routine = Tinkr.Routine
 local AceGUI = Tinkr.Util.AceGUI
@@ -137,9 +137,9 @@ Routine:RegisterRoutine(function()
         return
     end
 
-    if mounted() then
-        return
-    end
+    -- if mounted() then
+    --     return
+    -- end
 
     -- COMBAT --
     local function do_combat()
@@ -148,7 +148,7 @@ Routine:RegisterRoutine(function()
         -- SETTINGS --
 
         local mendPetInCombat = UI.config.read("mendPetInCombat", "true")
-        local mendPetPercentage = UI.config.read("mendPetPercentage", 50)
+        local mendPetPercentage = UI.config.read("mendPetPercentage", 40)
         local useTraps = UI.config.read("useTraps", "true")
 
         -- END SETTINGS --
@@ -216,7 +216,13 @@ Routine:RegisterRoutine(function()
         end
 
         if not UnitIsDeadOrGhost(pet) and IsPetActive() then
-            Eval("PetAttack()", "t")
+            if health(pet) > 30 or UnitIsPlayer(target) then
+                Eval("PetAttack()", "t")
+            end
+
+            if health(pet) < 20 and not UnitIsPlayer(target) then
+                Eval("PetFollow()", "t")
+            end
         end
 
         -- END ATTACK START --
