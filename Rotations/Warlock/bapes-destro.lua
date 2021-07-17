@@ -497,7 +497,7 @@ local bapesDestro_settings = {
             key = "useWand",
             type = "checkbox",
             text = "Use Wand"
-    },
+        },
         -- Corruption
         {
             key = "useCorruption",
