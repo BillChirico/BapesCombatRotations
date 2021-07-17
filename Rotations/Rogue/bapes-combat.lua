@@ -1,7 +1,7 @@
 -- Created By Bapes#1111 --
 -- Please do not distrubute without consent --
 
-local name = "Bapes Combat Rotation"
+local name = "Bapes Combat Rogue Rotation"
 local version = "v1.2"
 local Tinkr = ...
 local Routine = Tinkr.Routine
@@ -149,7 +149,16 @@ Routine:RegisterRoutine(function()
 
         -- SPELLS --
 
+        local bladeFlurry = highestrank(13877)
+        local adrenalineRush = highestrank(13750)
 
+        local sliceAndDice = highestrank(5171)
+        local rupture = highestrank(1943)
+        local garrote = highestrank(703)
+        local sinisterStrike = highestrank(1752)
+
+        local eviscerate = highestrank(2098)
+        local envenom = highestrank(32645)
 
         -- END SPELLS --
 
@@ -166,7 +175,15 @@ Routine:RegisterRoutine(function()
 
         -- BUFFS --
 
-        
+        -- Blade Flurry
+        if castable(bladeFlurry, target) and not buff(bladeFlurry, player) then
+            cast(bladeFlurry, target)
+        end
+
+        -- Adrenaline Rush
+        if castable(adrenalineRush, target) and not buff(adrenalineRush, player) then
+            cast(adrenalineRush, target)
+        end
 
         -- END BUFFS --
 
@@ -208,11 +225,6 @@ Routine:RegisterRoutine(function()
 
 
         -- END BUFFS --
-
-        -- Cat Form
-        if UnitExists(target) and alive(target) and not buff(catForm, player) and castable(catForm, player) and distance(player, target) <= math.random(25, 40) then
-            return cast(catForm, player)
-        end
 
         -- Stealth
         if UnitExists(target) and alive(target) and not buff(stealth, player) and castable(stealth, player) and distance(player, target) <= 15 then
