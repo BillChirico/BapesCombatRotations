@@ -2,7 +2,7 @@
 -- Please do not distrubute without consent --
 
 local name = "Bapes BM Rotation"
-local version = "v1.0"
+local version = "v1.1"
 local Tinkr = ...
 local Routine = Tinkr.Routine
 local AceGUI = Tinkr.Util.AceGUI
@@ -43,6 +43,10 @@ Tinkr:require("scripts.cromulon.libs.AceGUI30.widgets.AceGUIWidget-Label", UI)
 Tinkr:require("scripts.cromulon.libs.AceGUI30.widgets.AceGUIWidget-MultiLineEditBox", UI)
 Tinkr:require("scripts.cromulon.libs.AceGUI30.widgets.AceGUIWidget-Slider", UI)
 Tinkr:require("scripts.cromulon.system.configs", UI)
+Tinkr:require("scripts.wowex.libs.AceAddon30.AceAddon30", UI)
+Tinkr:require("scripts.wowex.libs.AceConsole30.AceConsole30", UI)
+Tinkr:require("scripts.wowex.libs.AceDB30.AceDB30", UI)
+Tinkr:require("scripts.cromulon.system.storage", UI)
 Tinkr:require("scripts.cromulon.libs.libCh0tFqRg.libCh0tFqRg", UI)
 Tinkr:require("scripts.cromulon.libs.libNekSv2Ip.libNekSv2Ip", UI)
 Tinkr:require("scripts.cromulon.libs.CallbackHandler10.CallbackHandler10", UI)
@@ -137,9 +141,9 @@ Routine:RegisterRoutine(function()
         return
     end
 
-    if mounted() then
-        return
-    end
+    -- if mounted() then
+    --     return
+    -- end
 
     -- COMBAT --
     local function do_combat()
@@ -148,7 +152,7 @@ Routine:RegisterRoutine(function()
         -- SETTINGS --
 
         local mendPetInCombat = UI.config.read("mendPetInCombat", "true")
-        local mendPetPercentage = UI.config.read("mendPetPercentage", 50)
+        local mendPetPercentage = UI.config.read("mendPetPercentage", 40)
         local useTraps = UI.config.read("useTraps", "true")
 
         -- END SETTINGS --
@@ -216,7 +220,13 @@ Routine:RegisterRoutine(function()
         end
 
         if not UnitIsDeadOrGhost(pet) and IsPetActive() then
-            Eval("PetAttack()", "t")
+            if health(pet) > 30 or UnitIsPlayer(target) then
+                Eval("PetAttack()", "t")
+            end
+
+            if health(pet) < 20 and not UnitIsPlayer(target) then
+                Eval("PetFollow()", "t")
+            end
         end
 
         -- END ATTACK START --
@@ -261,7 +271,7 @@ Routine:RegisterRoutine(function()
             return cast(multiShot, target)
         end
 
-        -- Steady Shot
+        -- Steady Shot 
         if (spellisspell(lastspell(), autoShot) or not spellisspell(lastspell(), steadyShot)) and castable(steadyShot, target) then
             return cast(steadyShot, target)
         end
