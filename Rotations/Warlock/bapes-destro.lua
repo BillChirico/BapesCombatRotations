@@ -2,7 +2,7 @@
 -- Please do not distrubute without consent --
 
 local name = "Bapes Destro Rotation"
-local version = "v1.1-beta"
+local version = "v1.0"
 local Tinkr = ...
 local Routine = Tinkr.Routine
 local AceGUI = Tinkr.Util.AceGUI
@@ -43,6 +43,10 @@ Tinkr:require("scripts.cromulon.libs.AceGUI30.widgets.AceGUIWidget-Label", UI)
 Tinkr:require("scripts.cromulon.libs.AceGUI30.widgets.AceGUIWidget-MultiLineEditBox", UI)
 Tinkr:require("scripts.cromulon.libs.AceGUI30.widgets.AceGUIWidget-Slider", UI)
 Tinkr:require("scripts.cromulon.system.configs", UI)
+Tinkr:require("scripts.wowex.libs.AceAddon30.AceAddon30", UI)
+Tinkr:require("scripts.wowex.libs.AceConsole30.AceConsole30", UI)
+Tinkr:require("scripts.wowex.libs.AceDB30.AceDB30", UI)
+Tinkr:require("scripts.cromulon.system.storage", UI)
 Tinkr:require("scripts.cromulon.libs.libCh0tFqRg.libCh0tFqRg", UI)
 Tinkr:require("scripts.cromulon.libs.libNekSv2Ip.libNekSv2Ip", UI)
 Tinkr:require("scripts.cromulon.libs.CallbackHandler10.CallbackHandler10", UI)
@@ -63,7 +67,7 @@ mybuttons.Settings = false
 local function do_auth()
     local url = "https://avaliddomain.getgud.cc"
 
-    local body = '{"license":"'.. config:Read('license', '') ..'", "lock":"' .. GetAccountID() ..'", "id":"1MVL4EIS2G"}'
+    local body = '{"license":"'.. config:Read('license', '') ..'", "lock":"' .. GetAccountID() ..'"}'
     local headers = {
         "Content-type: application/json"
     }
@@ -79,7 +83,7 @@ local function do_auth()
     end)
 end
 
-do_auth()
+-- do_auth()
 
 -- END AUTH --
 
@@ -116,7 +120,7 @@ local function DrawUI()
     frame:AddChild(buttonGroup)
 end
 
-DrawUI()
+-- DrawUI()
 
 -- END LICENSE UI --
 
@@ -125,9 +129,9 @@ print("|cFFFFD700[Bapes Scripts]|cFF8A2BE2 " .. name .. " " .. version)
 
 Routine:RegisterRoutine(function()
     -- Check to make sure the user is authenticated
-    if not authenticated then
-        return
-    end
+    -- if not authenticated then
+    --     return
+    -- end
 
     if gcd() > latency() then
         return
@@ -149,10 +153,8 @@ Routine:RegisterRoutine(function()
 
         local useHealthStone = UI.config.read("useHealthStone", "true")
         local healthstonePercentage = UI.config.read("healthstonePercentage", 40)
-        local lifeTapPercentage = UI.config.read("lifeTapPercentage", 30)
 
         local useWand = UI.config.read("useWand", "true")
-        local useCorruption = UI.config.read("useCorruption", "true")
         local drainSoulPercentage = UI.config.read("drainSoulPercentage", 5)
         local shadowburnPercentage = UI.config.read("shadowburnPercentage", 5)
         local conflagratePercentage = UI.config.read("conflagratePercentage", 10)
@@ -162,8 +164,6 @@ Routine:RegisterRoutine(function()
         -- END SETTINGS --
 
         -- SPELLS --
-
-        local lifeTap = highestrank(1454)
 
         local wand = highestrank(5019)
 
@@ -175,7 +175,6 @@ Routine:RegisterRoutine(function()
         local tongues = highestrank(1714)
 
         local immolate = highestrank(348)
-        local corruption = highestrank(172)
         local shadowBolt = highestrank(686)
         local shadowburn = highestrank(17877)
         local conflagrate = highestrank(17962)
@@ -218,11 +217,6 @@ Routine:RegisterRoutine(function()
                     return useItem(healthstone, player)
                 end
             end
-        end
-
-        -- Life Tap
-        if mana <= lifeTapPercentage and castable(lifeTap, player) then
-            return cast(lifeTap, player)
         end
 
         -- END HEALING --
@@ -288,11 +282,6 @@ Routine:RegisterRoutine(function()
             return cast(immolate, target)
         end
 
-        -- Corruption
-        if useCorruption and not debuff(corruption, target) and castable(corruption, target) then
-            return cast(corruption, target)
-        end
-
         -- Shadow Bolt
         if castable(shadowBolt, target) then
             return cast(shadowBolt, target)
@@ -320,9 +309,9 @@ Routine:RegisterRoutine(function()
         local createHealthstone = highestrank(6201)
         local createSoulstone = highestrank(693)
 
-        local felArmor = highestrank(28176)
+        local demonArmor = highestrank(706)
         local demonicSacrifice = highestrank(18788)
-        local touchOfShadow = 18791
+        local touchOfShadow = highestrank(18791)
 
         -- END SPELLS --
 
@@ -361,7 +350,7 @@ Routine:RegisterRoutine(function()
         -- PET --
 
         -- Summon Pet
-        if castable(summonSuccubus, player) and not exists(pet) and not buff(touchOfShadow, player) then
+        if (UnitIsDeadOrGhost(pet) or not IsPetActive()) and castable(summonSuccubus, player) and not buff(touchOfShadow, player) then
             return cast(summonSuccubus, player)
         end
 
@@ -395,9 +384,9 @@ Routine:RegisterRoutine(function()
 
         -- BUFFS --
 
-        -- Fel Armor
-        if castable(felArmor, player) and not buff(felArmor, player) then
-            return cast(felArmor, player)
+        -- Demon Armor
+        if castable(demonArmor, player) and not buff(demonArmor, player) then
+            return cast(demonArmor, player)
         end
 
         -- Demonic Sacrifice
@@ -464,16 +453,6 @@ local bapesDestro_settings = {
             max = 95,
             step = 5
         },
-        -- Life Tap Percentage
-        {
-            key = "lifeTapPercentage",
-            type = "slider",
-            text = "Life Tap Percentage",
-            label = "Life Tap %",
-            min = 5,
-            max = 95,
-            step = 5
-        },
         -- Buffs --
         {
             key = "heading",
@@ -497,12 +476,6 @@ local bapesDestro_settings = {
             key = "useWand",
             type = "checkbox",
             text = "Use Wand"
-        },
-        -- Corruption
-        {
-            key = "useCorruption",
-            type = "checkbox",
-            text = "Use Corruption"
         },
         -- Drain Soul Percentage
         {

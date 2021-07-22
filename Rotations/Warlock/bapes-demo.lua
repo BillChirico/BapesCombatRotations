@@ -2,7 +2,7 @@
 -- Please do not distrubute without consent --
 
 local name = "Bapes Demo Rotation"
-local version = "v1.0-beta"
+local version = "v1.0"
 local Tinkr = ...
 local Routine = Tinkr.Routine
 local AceGUI = Tinkr.Util.AceGUI
@@ -43,6 +43,10 @@ Tinkr:require("scripts.cromulon.libs.AceGUI30.widgets.AceGUIWidget-Label", UI)
 Tinkr:require("scripts.cromulon.libs.AceGUI30.widgets.AceGUIWidget-MultiLineEditBox", UI)
 Tinkr:require("scripts.cromulon.libs.AceGUI30.widgets.AceGUIWidget-Slider", UI)
 Tinkr:require("scripts.cromulon.system.configs", UI)
+Tinkr:require("scripts.wowex.libs.AceAddon30.AceAddon30", UI)
+Tinkr:require("scripts.wowex.libs.AceConsole30.AceConsole30", UI)
+Tinkr:require("scripts.wowex.libs.AceDB30.AceDB30", UI)
+Tinkr:require("scripts.cromulon.system.storage", UI)
 Tinkr:require("scripts.cromulon.libs.libCh0tFqRg.libCh0tFqRg", UI)
 Tinkr:require("scripts.cromulon.libs.libNekSv2Ip.libNekSv2Ip", UI)
 Tinkr:require("scripts.cromulon.libs.CallbackHandler10.CallbackHandler10", UI)
@@ -63,7 +67,7 @@ mybuttons.Settings = false
 local function do_auth()
     local url = "https://avaliddomain.getgud.cc"
 
-    local body = '{"license":"'.. config:Read('license', '') ..'", "lock":"' .. GetAccountID() ..'", "id":"RGEFNNSNNS"}'
+    local body = '{"license":"'.. config:Read('license', '') ..'", "lock":"' .. GetAccountID() ..'"}'
     local headers = {
         "Content-type: application/json"
     }
@@ -79,7 +83,7 @@ local function do_auth()
     end)
 end
 
-do_auth()
+-- do_auth()
 
 -- END AUTH --
 
@@ -116,7 +120,7 @@ local function DrawUI()
     frame:AddChild(buttonGroup)
 end
 
-DrawUI()
+-- DrawUI()
 
 -- END LICENSE UI --
 
@@ -125,9 +129,9 @@ print("|cFFFFD700[Bapes Scripts]|cFF8A2BE2 " .. name .. " " .. version)
 
 Routine:RegisterRoutine(function()
     -- Check to make sure the user is authenticated
-    if not authenticated then
-        return
-    end
+    -- if not authenticated then
+    --     return
+    -- end
 
     if gcd() > latency() then
         return
