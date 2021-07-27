@@ -8,11 +8,9 @@ local Routine = Tinkr.Routine
 local AceGUI = Tinkr.Util.AceGUI
 local Config = Tinkr.Util.Config
 local config = Config:New("bapes-feral")
-local HTTP = Tinkr.Util.HTTP
 local UI = {}
 local player = "player"
 local target = "target"
-local authenticated = false
 
 -- CROMULON --
 
@@ -63,77 +61,10 @@ mybuttons.Settings = false
 
 -- END CROMULON --
 
--- AUTH --
-
-local function do_auth()
-    local url = "https://avaliddomain.getgud.cc"
-
-    local body = '{"license":"'.. config:Read('license', '') ..'", "lock":"' .. GetAccountID() ..'"}'
-    local headers = {
-        "Content-type: application/json"
-    }
-
-    HTTP:POST(url, body, headers, function(status, buffer)
-        if (status == 200) then
-            authenticated = true
-            print("|cFFFFD700[Bapes Scripts]|cFF00FF00 You are authenticated to use " .. name .. "! Enjoy and please send feedback / support requests to Bapes#1111 on Discord")
-        else
-            authenticated = false
-            print("|cFFFFD700[Bapes Scripts]|cFFFF0000 Ut oh! You do not have access to this script, please purchase it before continuing and make sure you have entered the license correctly. For support DM Bapes#1111 on Discord")
-        end
-    end)
-end
-
--- do_auth()
-
--- END AUTH --
-
--- LICENSE UI --
-
-local function DrawUI()
-    local frame = AceGUI:Create("Window")
-    frame:SetTitle(name .. " " .. version)
-    frame:EnableResize(false)
-    frame:SetWidth(225)
-    frame:SetHeight(140)
-    frame:SetLayout("List")
-    frame:SetCallback("OnClose", function(widget)
-    end)
-
-    local buttonGroup = AceGUI:Create("SimpleGroup")
-    buttonGroup:SetFullWidth(true)
-    buttonGroup:SetHeight(75)
-
-    local license = AceGUI:Create("EditBox")
-    license:SetLabel("License")
-    license:SetWidth(200)
-    license:DisableButton(false)
-    license:SetText(config:Read("license", "Input license here"))
-    license:SetCallback("OnTextChanged", function(self, event, text)
-        config:Write("license", text)
-    end)
-    license:SetCallback("OnEnterPressed", function(self, event, text)
-        do_auth()
-    end)
-
-    buttonGroup:AddChild(license)
-
-    frame:AddChild(buttonGroup)
-end
-
--- DrawUI()
-
--- END LICENSE UI --
-
 -- Print name and version
 print("|cFFFFD700[Bapes Scripts]|cFF8A2BE2 " .. name .. " " .. version)
 
 Routine:RegisterRoutine(function()
-    -- Check to make sure the user is authenticated
-    -- if not authenticated then
-    --     return
-    -- end
-
     if gcd() > latency() then
         return
     end

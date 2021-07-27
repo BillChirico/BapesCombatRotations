@@ -2,18 +2,16 @@
 -- Please do not distrubute without consent --
 
 local name = "Bapes Demo Rotation"
-local version = "v1.0"
+local version = "v1.1"
 local Tinkr = ...
 local Routine = Tinkr.Routine
 local AceGUI = Tinkr.Util.AceGUI
 local Config = Tinkr.Util.Config
 local config = Config:New("bapes-demo")
-local HTTP = Tinkr.Util.HTTP
 local UI = {}
 local player = "player"
 local target = "target"
 local pet = "pet"
-local authenticated = false
 
 -- CROMULON --
 
@@ -62,77 +60,10 @@ mybuttons.Settings = false
 
 -- END CROMULON --
 
--- AUTH --
-
-local function do_auth()
-    local url = "https://avaliddomain.getgud.cc"
-
-    local body = '{"license":"'.. config:Read('license', '') ..'", "lock":"' .. GetAccountID() ..'"}'
-    local headers = {
-        "Content-type: application/json"
-    }
-
-    HTTP:POST(url, body, headers, function(status, buffer)
-        if (status == 200) then
-            authenticated = true
-            print("|cFFFFD700[Bapes Scripts]|cFF00FF00 You are authenticated to use " .. name .. "! Enjoy and please send feedback / support requests to Bapes#1111 on Discord")
-        else
-            authenticated = false
-            print("|cFFFFD700[Bapes Scripts]|cFFFF0000 Ut oh! You do not have access to this script, please purchase it before continuing and make sure you have entered the license correctly. For support DM Bapes#1111 on Discord")
-        end
-    end)
-end
-
--- do_auth()
-
--- END AUTH --
-
--- LICENSE UI --
-
-local function DrawUI()
-    local frame = AceGUI:Create("Window")
-    frame:SetTitle(name .. " " .. version)
-    frame:EnableResize(false)
-    frame:SetWidth(225)
-    frame:SetHeight(140)
-    frame:SetLayout("List")
-    frame:SetCallback("OnClose", function(widget)
-    end)
-
-    local buttonGroup = AceGUI:Create("SimpleGroup")
-    buttonGroup:SetFullWidth(true)
-    buttonGroup:SetHeight(75)
-
-    local license = AceGUI:Create("EditBox")
-    license:SetLabel("License")
-    license:SetWidth(200)
-    license:DisableButton(false)
-    license:SetText(config:Read("license", "Input license here"))
-    license:SetCallback("OnTextChanged", function(self, event, text)
-        config:Write("license", text)
-    end)
-    license:SetCallback("OnEnterPressed", function(self, event, text)
-        do_auth()
-    end)
-
-    buttonGroup:AddChild(license)
-
-    frame:AddChild(buttonGroup)
-end
-
--- DrawUI()
-
--- END LICENSE UI --
-
 -- Print name and version
 print("|cFFFFD700[Bapes Scripts]|cFF8A2BE2 " .. name .. " " .. version)
 
 Routine:RegisterRoutine(function()
-    -- Check to make sure the user is authenticated
-    -- if not authenticated then
-    --     return
-    -- end
-
     if gcd() > latency() then
         return
     end
@@ -154,12 +85,16 @@ Routine:RegisterRoutine(function()
         local useHealthStone = UI.config.read("useHealthStone", "true")
         local healthstonePercentage = UI.config.read("healthstonePercentage", 40)
 
+        local lifeTapPercentage = UI.config.read("lifeTapPercentage", 40)
+
         local useWand = UI.config.read("useWand", "true")
         local drainSoulPercentage = UI.config.read("drainSoulPercentage", 5)
 
         -- END SETTINGS --
 
         -- SPELLS --
+
+        local lifeTap = highestrank(1454)
 
         local wand = highestrank(5019)
 
@@ -210,6 +145,10 @@ Routine:RegisterRoutine(function()
         -- END HEALING --
 
         -- BUFFS --
+
+        if mana <= lifeTapPercentage and castable(lifetap, player) then
+            cast(lifetap, player)
+        end
 
         -- END BUFFS --
 
@@ -269,7 +208,6 @@ Routine:RegisterRoutine(function()
         local createHealthstone = highestrank(6201)
         local createSoulstone = highestrank(693)
 
-        local demonArmor = highestrank(706)
         local soulLink = highestrank(19028)
 
         -- END SPELLS --
@@ -343,9 +281,9 @@ Routine:RegisterRoutine(function()
 
         -- BUFFS --
 
-        -- Demon Armor
-        if castable(demonArmor, player) and not buff(demonArmor, player) then
-            return cast(demonArmor, player)
+        -- Fel Armor
+        if castable(FelArmor, player) and not buff(FelArmor, player) then
+            return cast(FelArmor, player)
         end
 
         -- Soul Link
@@ -428,6 +366,16 @@ local bapesDemo_settings = {
             key = "useSoulstone",
             type = "checkbox",
             text = "Use Soulstone"
+        },
+        -- Life Tap Percentage
+        {
+            key = "lifeTapPercentage",
+            type = "slider",
+            text = "Life Tap Percentage",
+            label = "Life Tap %",
+            min = 1,
+            max = 100,
+            step = 5
         },
         -- Combat Options --
         {
