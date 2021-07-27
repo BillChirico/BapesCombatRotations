@@ -192,25 +192,59 @@ Routine:RegisterRoutine(function()
         end
 
         -- SPELLS --
-
-        local motw = highestrank(1126)
-        local thorns = highestrank(467)
+        
         local omenOfClarity = highestrank(16864)
 
         local feralCharge = highestrank(16979)
+
+        -- MOTW Ranks
+        local motwRanks = {
+            21849,
+            21850,
+            26991,
+            1126,
+            5232,
+            8907,
+            9884,
+            9885,
+            26990
+        }
+
+        -- Thorns Ranks
+        local thornsRanks = {
+            467,
+            782,
+            1075,
+            8914,
+            9756,
+            9910,
+            26992
+        }
 
         -- END SPELLS --
 
         -- BUFFS --
 
-        -- MOTW (Check for GOTW)
-        if castable(motw) and not buff(motw, player) and not buff(21849, player) and not buff(21850, player) and not buff(26991, player) then
-            return cast(motw, player)
+        -- MOTW (Check for GOTW & all ranks)
+        if castable(MarkOfTheWild, player) and not buff(MarkOfTheWild, player) and not buff(GiftOfTheWild, player) then
+            for _, motwRank in pairs(motwRanks) do
+                if buff(motwRank, player) then
+                    break
+                end
+            end
+
+            return cast(MarkOfTheWild, player)
         end
 
-        -- Thorns
-        if castable(thorns) and not buff(thorns, player) then
-            return cast(thorns, player)
+        -- Thorns (Check for all ranks)
+        if castable(Thorns, player) and not buff(Thorns, player) then
+            for _, thornRank in pairs(thornsRanks) do
+                if buff(thornRank, player) then
+                    break
+                end
+            end
+
+            return cast(Thorns, player)
         end
 
         -- Omen of Clarity
