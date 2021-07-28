@@ -27,6 +27,7 @@ Routine:RegisterRoutine(function()
         local mendPetInCombat = UI.config.read("mendPetInCombat", "true")
         local mendPetPercentage = UI.config.read("mendPetPercentage", 40)
         local useTraps = UI.config.read("useTraps", "true")
+        local useSerpentSting = UI.config.read("useSerpentSting", "false")
 
         -- END SETTINGS --
 
@@ -49,6 +50,7 @@ Routine:RegisterRoutine(function()
         local steadyShot = highestrank(34120)
         local killCommand = highestrank(34026)
         local multiShot = highestrank(2643)
+        local serpentSting = highestrank(1978)
 
         -- END SPELLS --
 
@@ -116,6 +118,11 @@ Routine:RegisterRoutine(function()
             return cast(concussiveShot, target)
         end
 
+        -- Serpent Sting
+        if useSerpentSting and castable(serpentSting, target) and not debuff(serpentSting, target) then
+            return cast(serpentSting, target)
+        end
+
         -- Traps
         if useTraps and melee() then
             if enemies(target, 20) >= 2 then
@@ -142,6 +149,12 @@ Routine:RegisterRoutine(function()
         -- Multi Shot
         if enemies(target, 20) >= 2 and castable(multiShot, target) then
             return cast(multiShot, target)
+        end
+
+        -- Arcane Shot
+        if not castable(Multishot, target) and spellisspell(lastspell(1), AutoShot) and
+            spellisspell(lastspell(2), SteadyShot) and castable(ArcaneShot, target) then
+            return cast(ArcaneShot, target)
         end
 
         -- Steady Shot 
@@ -309,6 +322,12 @@ local bapesBM_settings = {
             key = "useTraps",
             type = "checkbox",
             text = "Use Traps"
+        },
+        -- Use Serpent Sting
+        {
+            key = "useSerpentSting",
+            type = "checkbox",
+            text = "Use Serpent Sting"
         }
     }
 }
