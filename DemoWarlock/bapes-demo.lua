@@ -5,7 +5,6 @@ local name = "Bapes Demo Rotation"
 local version = "v1.1"
 local Tinkr = ...
 local Routine = Tinkr.Routine
-local Config = Tinkr.Util.Config
 local UI = {}
 local player = "player"
 local target = "target"
