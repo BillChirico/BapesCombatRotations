@@ -278,9 +278,9 @@ Routine:RegisterRoutine(function()
         local needsFeeding = ({true, true})[GetPetHappiness()]
         if needsFeeding and not UnitIsDeadOrGhost(pet) and IsPetActive() and not buff(1539, pet) and castable(FeedPet, pet) and FeedPet_cd < GetTime() then
             FeedPet_cd = GetTime() + 4
-            return Eval('RunMacroText("' .. '/click FOM_FeedButton' .. '")', 'something')
+            return Eval('RunMacroText("' .. "/click FOM_FeedButton" .. '")', "something")
         end
-
+        
         -- Aspect
         if aspect == "Viper" and castable(aspectViper, player) and not buff(aspectViper, player) then
             return cast(aspectViper, player)
