@@ -84,6 +84,7 @@ Routine:RegisterRoutine(
 
             local deathWish = highestrank(12292)
             local recklessness = highestrank(1719)
+            local sweepingStrikes = highestrank(12328)
 
             local execute = highestrank(5308)
             local mortalStrike = highestrank(12294)
@@ -101,6 +102,12 @@ Routine:RegisterRoutine(
             -- END HEALING --
 
             -- BUFFS --
+
+            if enemies(target, 10) >= 2 then
+                if castable(sweepingStrikes, player) then
+                    return cast(sweepingStrikes, player)
+                end
+            end
 
             if not buff(bloodrage, player) and castable(bloodrage, player) then
                 return cast(bloodrage, player)
