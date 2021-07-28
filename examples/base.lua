@@ -5,9 +5,6 @@ local name = "Bapes TODO Rotation"
 local version = "v1.0"
 local Tinkr = ...
 local Routine = Tinkr.Routine
-local AceGUI = Tinkr.Util.AceGUI
-local Config = Tinkr.Util.Config
-local config = Config:New("bapes-TODO")
 local UI = {}
 local player = "player"
 local target = "target"
@@ -62,122 +59,103 @@ mybuttons.Settings = false
 -- Print name and version
 print("|cFFFFD700[Bapes Scripts]|cFF8A2BE2 " .. name .. " " .. version)
 
-Routine:RegisterRoutine(function()
+Routine:RegisterRoutine(
+  function()
     if gcd() > latency() then
-        return
+      return
     end
 
     if not latencyCheck() then
-        return
+      return
     end
 
     -- COMBAT --
     local function do_combat()
-        -- SETTINGS --
+      -- SETTINGS --
 
+      -- END SETTINGS --
 
+      -- SPELLS --
 
-        -- END SETTINGS --
+      -- END SPELLS --
 
-        -- SPELLS --
+      -- Auto Attack
+      if UnitExists(target) and not UnitIsDeadOrGhost(target) and enemy(target) then
+        Eval("StartAttack()", "t")
+      end
 
+      -- HEALING --
 
+      -- END HEALING --
 
-        -- END SPELLS --
+      -- BUFFS --
 
-        -- Auto Attack
-        if UnitExists(target) and not UnitIsDeadOrGhost(target) and enemy(target) then
-            Eval('StartAttack()', 't')
-        end
+      -- END BUFFS --
 
-        -- HEALING --
+      -- DEBUFFS --
 
+      -- END DEBUFFS --
 
+      -- ROTATION --
 
-        -- END HEALING --
-
-        -- BUFFS --
-
-
-
-        -- END BUFFS --
-
-        -- DEBUFFS --
-
-
-
-        -- END DEBUFFS --
-
-        -- ROTATION --
-
-
-
-        -- END ROTATION --
-
+      -- END ROTATION --
     end
 
     -- RESTING --
     local function do_resting()
-        if UnitIsDeadOrGhost(player) or UnitIsDeadOrGhost(target) or IsEatingOrDrinking() then
-            return
-        end
+      if UnitIsDeadOrGhost(player) or UnitIsDeadOrGhost(target) or IsEatingOrDrinking() then
+        return
+      end
 
-        -- SETTINGS --
+      -- SETTINGS --
 
+      -- END SETTINGS --
 
+      -- SPELLS --
 
-        -- END SETTINGS --
+      -- END SPELLS --
 
-        -- SPELLS --
+      -- HEALING --
 
+      -- END HEALING --
 
+      -- BUFFS --
 
-        -- END SPELLS --
-
-        -- HEALING --
-
-
-
-        -- END HEALING --
-
-        -- BUFFS --
-
-        
-
-        -- END BUFFS --
+      -- END BUFFS --
     end
 
     if combat(player) then
-        do_combat()
-        return
+      do_combat()
+      return
     else
-        do_resting()
-        return
+      do_resting()
+      return
     end
-
-end, Routine.Classes.TODO, "bapes-TODO")
+  end,
+  Routine.Classes.TODO,
+  "bapes-TODO"
+)
 Routine:LoadRoutine("bapes-TODO")
 
 local bapesTODO_settings = {
-    key = "bapes_TODO_config",
-    title = "Bapes Scripts",
-    width = 400,
-    height = 400,
-    color = "F58CBA",
-    resize = false,
-    show = false,
-    table = {
-        {
-            key = "heading",
-            type = "heading",
-            text = name .. " " .. version
-        }
+  key = "bapes_TODO_config",
+  title = "Bapes Scripts",
+  width = 400,
+  height = 400,
+  color = "F58CBA",
+  resize = false,
+  show = false,
+  table = {
+    {
+      key = "heading",
+      type = "heading",
+      text = name .. " " .. version
     }
+  }
 }
 
 UI.build_rotation_gui(bapesTODO_settings)
 
-local bapesTODO_buttons = {
-}
+local bapesTODO_buttons = {}
 
 UI.button_factory(bapesTODO_buttons)
