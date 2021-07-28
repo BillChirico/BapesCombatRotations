@@ -40,10 +40,10 @@ Tinkr:require("scripts.cromulon.libs.HereBeDragons.HereBeDragons-20", UI)
 Tinkr:require("scripts.cromulon.libs.HereBeDragons.HereBeDragons-pins-20", UI)
 Tinkr:require("scripts.cromulon.interface.uibuilder", UI)
 Tinkr:require("scripts.cromulon.interface.buttons", UI)
-mybuttons.On = false
-mybuttons.Cooldowns = false
-mybuttons.MultiTarget = false
-mybuttons.Interupts = false
-mybuttons.Settings = false
+-- mybuttons.On = false
+-- mybuttons.Cooldowns = false
+-- mybuttons.MultiTarget = false
+-- mybuttons.Interupts = false
+-- mybuttons.Settings = false
 
 -- END CROMULON IMPORTS --
