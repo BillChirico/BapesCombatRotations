@@ -73,10 +73,6 @@ Routine:RegisterRoutine(function()
 
     -- COMBAT --
     local function do_combat()
-        local mana = power()
-        local comboPoints = GetComboPoints(player, target)
-        local rage = power(PowerType.Rage)
-
         -- SETTINGS --
 
 
