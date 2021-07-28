@@ -60,154 +60,154 @@ mybuttons.Settings = false
 print("|cFFFFD700[Bapes Scripts]|cFF8A2BE2 " .. name .. " " .. version)
 
 Routine:RegisterRoutine(
-    function()
-        if gcd() > latency() then
-            return
+  function()
+    if gcd() > latency() then
+      return
+    end
+
+    if not latencyCheck() then
+      return
+    end
+
+    -- COMBAT --
+    local function do_combat()
+      -- SETTINGS --
+
+      -- END SETTINGS --
+
+      -- SPELLS --
+
+      local attack = highestrank(88163)
+      local battleShout = highestrank(6673)
+
+      local bloodrage = highestrank(2687)
+
+      local deathWish = highestrank(12292)
+      local recklessness = highestrank(1719)
+      local sweepingStrikes = highestrank(12328)
+
+      local execute = highestrank(5308)
+      local mortalStrike = highestrank(12294)
+      local slam = highestrank(1464)
+
+      -- END SPELLS --
+
+      -- Auto Attack
+      if UnitExists(target) and not UnitIsDeadOrGhost(target) and enemy(target) then
+        Eval("StartAttack()", "t")
+      end
+
+      -- HEALING --
+
+      -- END HEALING --
+
+      -- BUFFS --
+
+      if enemies(target, 10) >= 2 then
+        if castable(sweepingStrikes, player) then
+          return cast(sweepingStrikes, player)
         end
+      end
 
-        if not latencyCheck() then
-            return
-        end
+      if not buff(bloodrage, player) and castable(bloodrage, player) then
+        return cast(bloodrage, player)
+      end
 
-        -- COMBAT --
-        local function do_combat()
-            -- SETTINGS --
+      if not buff(deathWish, player) and castable(deathWish, player) then
+        return cast(deathWish, player)
+      end
 
-            -- END SETTINGS --
+      if not buff(recklessness, player) and castable(recklessness, player) then
+        return cast(recklessness, player)
+      end
 
-            -- SPELLS --
+      if not buff(battleShout, player) and castable(battleShout, player) then
+        return cast(battleShout, player)
+      end
 
-            local attack = highestrank(88163)
-            local battleShout = highestrank(6673)
+      -- END BUFFS --
 
-            local bloodrage = highestrank(2687)
+      -- DEBUFFS --
 
-            local deathWish = highestrank(12292)
-            local recklessness = highestrank(1719)
-            local sweepingStrikes = highestrank(12328)
+      -- END DEBUFFS --
 
-            local execute = highestrank(5308)
-            local mortalStrike = highestrank(12294)
-            local slam = highestrank(1464)
+      -- ROTATION --
 
-            -- END SPELLS --
+      -- Execute
+      if health(target) < 20 and castable(execute, target) then
+        return cast(execute, target)
+      end
 
-            -- Auto Attack
-            if UnitExists(target) and not UnitIsDeadOrGhost(target) and enemy(target) then
-                Eval("StartAttack()", "t")
-            end
+      -- Slam into Mortal Strike
+      if spellisspell(lastspell(), slam) then
+        return cast(mortalStrike, target)
+      end
 
-            -- HEALING --
+      -- Attack into Slam
+      if spellisspell(lastspell(), attack) then
+        return cast(slam, target)
+      end
 
-            -- END HEALING --
+      -- END ROTATION --
+    end
 
-            -- BUFFS --
+    -- RESTING --
+    local function do_resting()
+      if UnitIsDeadOrGhost(player) or UnitIsDeadOrGhost(target) or IsEatingOrDrinking() then
+        return
+      end
 
-            if enemies(target, 10) >= 2 then
-                if castable(sweepingStrikes, player) then
-                    return cast(sweepingStrikes, player)
-                end
-            end
+      -- SETTINGS --
 
-            if not buff(bloodrage, player) and castable(bloodrage, player) then
-                return cast(bloodrage, player)
-            end
+      -- END SETTINGS --
 
-            if not buff(deathWish, player) and castable(deathWish, player) then
-                return cast(deathWish, player)
-            end
+      -- SPELLS --
 
-            if not buff(recklessness, player) and castable(recklessness, player) then
-                return cast(recklessness, player)
-            end
+      local battleShout = highestrank(6673)
 
-            if not buff(battleShout, player) and castable(battleShout, player) then
-                return cast(battleShout, player)
-            end
+      -- END SPELLS --
 
-            -- END BUFFS --
+      -- HEALING --
 
-            -- DEBUFFS --
+      -- END HEALING --
 
-            -- END DEBUFFS --
+      -- BUFFS --
 
-            -- ROTATION --
+      if not buff(battleShout, player) and castable(battleShout, player) then
+        return cast(battleShout, player)
+      end
 
-            -- Execute
-            if health(target) < 20 and castable(execute, target) then
-                return cast(execute, target)
-            end
+      -- END BUFFS --
+    end
 
-            -- Slam into Mortal Strike
-            if spellisspell(lastspell(), slam) then
-                return cast(mortalStrike, target)
-            end
-
-            -- Attack into Slam
-            if spellisspell(lastspell(), attack) then
-                return cast(slam, target)
-            end
-
-            -- END ROTATION --
-        end
-
-        -- RESTING --
-        local function do_resting()
-            if UnitIsDeadOrGhost(player) or UnitIsDeadOrGhost(target) or IsEatingOrDrinking() then
-                return
-            end
-
-            -- SETTINGS --
-
-            -- END SETTINGS --
-
-            -- SPELLS --
-
-            local battleShout = highestrank(6673)
-
-            -- END SPELLS --
-
-            -- HEALING --
-
-            -- END HEALING --
-
-            -- BUFFS --
-
-            if not buff(battleShout, player) and castable(battleShout, player) then
-                return cast(battleShout, player)
-            end
-
-            -- END BUFFS --
-        end
-
-        if combat(player) then
-            do_combat()
-            return
-        else
-            do_resting()
-            return
-        end
-    end,
-    Routine.Classes.Warrior,
-    "bapes-arms"
+    if combat(player) then
+      do_combat()
+      return
+    else
+      do_resting()
+      return
+    end
+  end,
+  Routine.Classes.Warrior,
+  "bapes-arms"
 )
 Routine:LoadRoutine("bapes-arms")
 
 local bapesArms_settings = {
-    key = "bapes_arms_config",
-    title = "Bapes Scripts",
-    width = 400,
-    height = 400,
-    color = "F58CBA",
-    resize = false,
-    show = false,
-    table = {
-        {
-            key = "heading",
-            type = "heading",
-            text = name .. " " .. version
-        }
+  key = "bapes_arms_config",
+  title = "Bapes Scripts",
+  width = 400,
+  height = 400,
+  color = "F58CBA",
+  resize = false,
+  show = false,
+  table = {
+    {
+      key = "heading",
+      type = "heading",
+      text = name .. " " .. version
     }
+  }
 }
 
 UI.build_rotation_gui(bapesArms_settings)
