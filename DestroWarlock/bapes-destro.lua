@@ -466,7 +466,6 @@ local bapesDestro_settings = {
 
 UI.build_rotation_gui(bapesDestro_settings)
 
-local bapesDestro_buttons = {
-}
+local bapesDestro_buttons = {}
 
 UI.button_factory(bapesDestro_buttons)

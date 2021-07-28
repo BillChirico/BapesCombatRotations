@@ -59,8 +59,7 @@ mybuttons.Settings = false
 -- Print name and version
 print("|cFFFFD700[Bapes Scripts]|cFF8A2BE2 " .. name .. " " .. version)
 
-Routine:RegisterRoutine(
-  function()
+Routine:RegisterRoutine(function()
     if gcd() > latency() then
       return
     end
@@ -181,33 +180,31 @@ Routine:RegisterRoutine(
     end
 
     if combat(player) then
-      do_combat()
-      return
+        do_combat()
+        return
     else
-      do_resting()
-      return
+        do_resting()
+        return
     end
-  end,
-  Routine.Classes.Warrior,
-  "bapes-arms"
-)
-Routine:LoadRoutine("bapes-arms")
 
-local bapesArms_settings = {
-  key = "bapes_arms_config",
-  title = "Bapes Scripts",
-  width = 400,
-  height = 400,
-  color = "F58CBA",
-  resize = false,
-  show = false,
-  table = {
-    {
-      key = "heading",
-      type = "heading",
-      text = name .. " " .. version
+  end, Routine.Classes.Warrior, "bapes-arms")
+  Routine:LoadRoutine("bapes-arms")
+
+  local bapesArms_settings = {
+    key = "bapes_arms_config_config",
+    title = "Bapes Scripts",
+    width = 400,
+    height = 300,
+    color = "F58CBA",
+    resize = false,
+    show = false,
+    table = {
+        {
+            key = "heading",
+            type = "heading",
+            text = name .. " " .. version
+        }
     }
-  }
 }
 
 UI.build_rotation_gui(bapesArms_settings)
