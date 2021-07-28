@@ -1,9 +1,8 @@
 -- Created By Bapes#1111 --
 -- Please do not distrubute without consent --
-
+local Tinkr, UI = ...
 local name = "Bapes BM Rotation"
 local version = "v1.1"
-local Tinkr = ...
 local Routine = Tinkr.Routine
 local player = "player"
 local target = "target"

@@ -5,8 +5,15 @@ local name = "Bapes Feral Rotation"
 local version = "v1.2"
 local Tinkr = ...
 local Routine = Tinkr.Routine
+local UI = {}
 local player = "player"
 local target = "target"
+
+-- Bapes Dependencies --
+
+Tinkr:require("scripts.cromulon.bapes.shared.imports.lua", UI)
+
+-- Bapes Dependencies --
 
 -- Print name and version
 print("|cFFFFD700[Bapes Scripts]|cFF8A2BE2 " .. name .. " " .. version)
@@ -156,7 +163,7 @@ Routine:RegisterRoutine(function()
 
       if buff(bearForm, player) then
         -- Frenzied Regeneration
-        if health() <= 35 and castable(frenziedRegeneration, player) then
+        if health() <= 35 and castable(frenziedRegeneration, player) thenwww
           return cast(frenziedRegeneration, player)
         end
 
