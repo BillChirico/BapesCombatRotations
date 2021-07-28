@@ -2,13 +2,12 @@
 -- Please do not distrubute without consent --
 
 local name = "Bapes Destro Rotation"
-local version = "v1.0"
+local version = "v1.1"
 local Tinkr = ...
 local Routine = Tinkr.Routine
 local AceGUI = Tinkr.Util.AceGUI
 local Config = Tinkr.Util.Config
 local config = Config:New("bapes-destro")
-local HTTP = Tinkr.Util.HTTP
 local UI = {}
 local player = "player"
 local target = "target"
