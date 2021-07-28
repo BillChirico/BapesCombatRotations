@@ -9,12 +9,6 @@ local player = "player"
 local target = "target"
 local pet = "pet"
 
--- Bapes Dependencies --
-
-Tinkr:require("scripts.cromulon.bapes.shared.imports.lua", UI)
-
--- Bapes Dependencies --
-
 -- Print name and version
 print("|cFFFFD700[Bapes Scripts]|cFF8A2BE2 " .. name .. " " .. version)
 

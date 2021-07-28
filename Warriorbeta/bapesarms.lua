@@ -8,12 +8,6 @@ local Routine = Tinkr.Routine
 local player = "player"
 local target = "target"
 
--- Bapes Dependencies --
-
-Tinkr:require("scripts.cromulon.bapes.shared.imports.lua", UI)
-
--- Bapes Dependencies --
-
 -- Print name and version
 print("|cFFFFD700[Bapes Scripts]|cFF8A2BE2 " .. name .. " " .. version)
 

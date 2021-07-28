@@ -9,12 +9,6 @@ local player = "player"
 local target = "target"
 local pet = "pet"
 
--- CROMULON --
-
-Tinkr:require("scripts.cromulon.interface.buttons", UI)
-
--- END CROMULON --
-
 -- Print name and version
 print("|cFFFFD700[Bapes Scripts]|cFF8A2BE2 " .. name .. " " .. version)
 
