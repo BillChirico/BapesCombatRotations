@@ -5,10 +5,6 @@ local Routine = Tinkr.Routine
 local player = "player"
 local target = "target"
 
-
-
--- END CROMULON --
-
 -- Print name and version
 print("|cFFFFD700[Bapes Scripts]|cFF8A2BE2 " .. name .. " " .. version)
 
