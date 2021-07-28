@@ -5,9 +5,6 @@ local name = "Bapes Bear Rotation"
 local version = "v1.0"
 local Tinkr = ...
 local Routine = Tinkr.Routine
-local AceGUI = Tinkr.Util.AceGUI
-local Config = Tinkr.Util.Config
-local config = Config:New("bapes-bear")
 local player = "player"
 local target = "target"
 
