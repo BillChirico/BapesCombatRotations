@@ -8,7 +8,6 @@ local Routine = Tinkr.Routine
 local AceGUI = Tinkr.Util.AceGUI
 local Config = Tinkr.Util.Config
 local config = Config:New("bapes-bm")
-local HTTP = Tinkr.Util.HTTP
 local UI = {}
 local player = "player"
 local target = "target"
