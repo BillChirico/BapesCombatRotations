@@ -2,7 +2,7 @@
 -- Please do not distrubute without consent --
 
 local name = "Bapes Bear Rotation"
-local version = "v1.0"
+local version = "v1.0-beta"
 local Tinkr = ...
 local Routine = Tinkr.Routine
 local player = "player"
@@ -27,7 +27,6 @@ Routine:RegisterRoutine(function()
 
     -- COMBAT --
     local function do_combat()
-        local mana = power()
         local rage = power(PowerType.Rage)
 
         -- SPELLS --
@@ -52,14 +51,14 @@ Routine:RegisterRoutine(function()
 
         -- Auto Attack
         if UnitExists(target) and not UnitIsDeadOrGhost(target) and enemy(target) then
-            Eval('StartAttack()', 't')
+            Eval("StartAttack()", "t")
         end
 
         -- BUFFS --
 
         -- Bear Form
-        if not buff(bearForm) and castable(bearForm) then
-            return cast(bearForm)
+        if not buff(bearForm, player) and castable(bearForm, player) then
+            return cast(bearForm, player)
         end
 
         -- END BUFFS --
@@ -67,12 +66,12 @@ Routine:RegisterRoutine(function()
         -- HEALING --
 
         -- Frenzied Regeneration
-        if health() <= 35 and castable(frenziedRegeneration) then
+        if health() <= 35 and castable(frenziedRegeneration, player) then
             return cast(frenziedRegeneration, player)
         end
 
         -- Frenzied Regeneration is still going so don't use abilities
-        if buff(frenziedRegeneration) then
+        if buff(frenziedRegeneration, player) then
             return
         end
 
@@ -89,7 +88,7 @@ Routine:RegisterRoutine(function()
         -- ROTATION --
 
         -- Feral Charge
-        if UnitExists(target) and spellInRange(feralCharge) and castable(feralCharge) then
+        if UnitExists(target) and spellInRange(feralCharge) and castable(feralCharge, target) then
             return cast(feralCharge, target)
         end
 
@@ -177,19 +176,19 @@ Routine:RegisterRoutine(function()
         end
 
         -- Omen of Clarity
-        if castable(omenOfClarity) and not buff(omenOfClarity, player) then
+        if castable(omenOfClarity, player) and not buff(omenOfClarity, player) then
             return cast(omenOfClarity, player)
         end
 
         -- END BUFFS --
 
         -- Bear Form
-        if UnitExists(target) and alive(target) and not buff(5487) and castable(5487) and distance(player, target) <= math.random(25, 40) then
-            return cast(5487)
+        if UnitExists(target) and alive(target) and not buff(5487, player) and castable(5487, player) and distance(player, target) <= math.random(25, 40) then
+            return cast(5487, player)
         end
 
         -- Feral Charge
-        if UnitExists(target) and spellInRange(feralCharge) and castable(feralCharge) then
+        if UnitExists(target) and spellInRange(feralCharge) and castable(feralCharge, target) then
             return cast(feralCharge, target)
         end
     end
