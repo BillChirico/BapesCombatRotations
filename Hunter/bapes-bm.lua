@@ -72,14 +72,8 @@ Routine:RegisterRoutine(function()
         return
     end
 
-    -- if mounted() then
-    --     return
-    -- end
-
     -- COMBAT --
     local function do_combat()
-        local mana = power()
-
         -- SETTINGS --
 
         local mendPetInCombat = UI.config.read("mendPetInCombat", "true")

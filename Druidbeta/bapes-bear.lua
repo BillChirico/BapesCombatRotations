@@ -119,7 +119,7 @@ Routine:RegisterRoutine(function()
 
     -- RESTING --
     local function do_resting()
-        if UnitIsDeadOrGhost(player) or UnitIsDeadOrGhost(target) then
+        if UnitIsDeadOrGhost(player) or UnitIsDeadOrGhost(target) or IsEatingOrDrinking() then
             return
         end
 
