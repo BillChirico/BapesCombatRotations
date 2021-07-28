@@ -369,7 +369,7 @@ Routine:RegisterRoutine(
       end
 
       -- Pounce
-      if UnitExists(target) and spellInRange(pounce) and castable(pounce) then
+      if UnitExists(target) and spellInRange(pounce) and castable(pounce, target) then
         return cast(pounce, target)
       end
     end
