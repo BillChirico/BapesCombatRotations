@@ -147,7 +147,7 @@ Routine:RegisterRoutine(function()
         -- BUFFS --
 
         if mana <= lifeTapPercentage and castable(lifetap, player) then
-            cast(lifetap, player)
+            cast(lifeTap, player)
         end
 
         -- END BUFFS --

@@ -98,6 +98,8 @@ Routine:RegisterRoutine(function()
 
         -- SPELLS --
 
+        local lifeTap = highestrank(1454)
+
         local wand = highestrank(5019)
 
         local elements = highestrank(1490)
@@ -157,7 +159,7 @@ Routine:RegisterRoutine(function()
         -- BUFFS --
 
         if mana <= lifeTapPercentage and castable(lifetap, player) then
-            cast(lifetap, player)
+            cast(lifeTap, player)
         end
 
         -- END BUFFS --
