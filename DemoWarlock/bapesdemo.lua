@@ -33,6 +33,7 @@ Routine:RegisterRoutine(function()
 
         local useHealthStone = UI.config.read("useHealthStone", "true")
         local healthstonePercentage = UI.config.read("healthstonePercentage", 40)
+        local healthFunnelPercentage = UI.config.read("healthFunnelPercentage", 30)
 
         local lifeTapPercentage = UI.config.read("lifeTapPercentage", 40)
 
@@ -44,6 +45,7 @@ Routine:RegisterRoutine(function()
         -- SPELLS --
 
         local lifeTap = highestrank(1454)
+        local healthFunnel = highestrank(755)
 
         local wand = highestrank(5019)
 
@@ -89,6 +91,11 @@ Routine:RegisterRoutine(function()
                     return useItem(healthstone, player)
                 end
             end
+        end
+
+        -- Health Funnel
+        if health(pet) <= healthFunnelPercentage and castable(healthFunnel, pet) and not debuff(healthFunnel, player) then
+            return cast(healthFunnel, pet)
         end
 
         -- END HEALING --
@@ -301,6 +308,16 @@ local bapesDemo_settings = {
             label = "Healthstone %",
             min = 5,
             max = 95,
+            step = 5
+        },
+        -- Health Funnel Percentage
+        {
+            key = "healthFunnelPercentage",
+            type = "slider",
+            text = "Health Funnel Percentagee",
+            label = "Health Funnel  %",
+            min = 0,
+            max = 100,
             step = 5
         },
         -- Buffs --
