@@ -1,11 +1,10 @@
 -- Created By Bapes#1111 --
 -- Please do not distrubute without consent --
 
+local Tinkr, UI = ...
 local name = "Bapes TODO Rotation"
 local version = "v1.0"
-local Tinkr = ...
 local Routine = Tinkr.Routine
-local UI = {}
 local player = "player"
 local target = "target"
 
