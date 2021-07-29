@@ -1,8 +1,9 @@
 -- Created By Bapes#1111 --
 -- Please do not distrubute without consent --
+
 local Tinkr, UI = ...
 local name = "Bapes BM Rotation"
-local version = "v1.1"
+local version = "v1.2"
 local Routine = Tinkr.Routine
 local player = "player"
 local target = "target"
@@ -334,7 +335,6 @@ local bapesBM_settings = {
 
 UI.build_rotation_gui(bapesBM_settings)
 
-local bapesBM_buttons = {
-}
+local bapesBM_buttons = {}
 
 UI.button_factory(bapesBM_buttons)

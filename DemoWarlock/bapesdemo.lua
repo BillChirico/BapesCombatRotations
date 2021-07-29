@@ -1,9 +1,9 @@
 -- Created By Bapes#1111 --
 -- Please do not distrubute without consent --
 
+local Tinkr, UI = ...
 local name = "Bapes Demo Rotation"
 local version = "v1.1"
-local Tinkr = ...
 local Routine = Tinkr.Routine
 local player = "player"
 local target = "target"
@@ -196,7 +196,7 @@ Routine:RegisterRoutine(function()
         -- PET --
 
         -- Summon Pet
-        if (UnitIsDeadOrGhost(pet) or not IsPetActive()) and castable(summonFelguard, player) then
+        if not IsPetActive() and castable(summonFelguard, player) then
             return cast(summonFelguard, player)
         end
 
@@ -353,7 +353,6 @@ local bapesDemo_settings = {
 
 UI.build_rotation_gui(bapesDemo_settings)
 
-local bapesDemo_buttons = {
-}
+local bapesDemo_buttons = {}
 
 UI.button_factory(bapesDemo_buttons)
