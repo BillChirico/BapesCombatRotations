@@ -153,7 +153,6 @@ Routine:RegisterRoutine(function()
 
         -- SPELLS --
 
-        local summonFelguard = highestrank(30146)
         local createHealthstone = highestrank(6201)
         local createSoulstone = highestrank(693)
 
@@ -196,8 +195,8 @@ Routine:RegisterRoutine(function()
         -- PET --
 
         -- Summon Pet
-        if not IsPetActive() and castable(summonFelguard, player) then
-            return cast(summonFelguard, player)
+        if (UnitIsDeadOrGhost(pet) or not IsPetActive()) and castable(SummonFelguard, player) then
+            return cast(SummonFelguard, player)
         end
 
         -- END PET --
@@ -236,7 +235,7 @@ Routine:RegisterRoutine(function()
         end
 
         -- Soul Link
-        if castable(soulLink, player) and not buff(25228, player) then
+        if IsPetActive() and castable(soulLink, player) and not buff(soulLink, player) and not buff(25228, player) then
             return cast(soulLink, player)
         end
 
