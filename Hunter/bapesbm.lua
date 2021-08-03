@@ -29,6 +29,8 @@ Routine:RegisterRoutine(function()
         local mendPetPercentage = UI.config.read("mendPetPercentage", 40)
         local useTraps = UI.config.read("useTraps", "true")
         local useSerpentSting = UI.config.read("useSerpentSting", "false")
+        local useHuntersMark = UI.config.read("useHuntersMark", "true")
+        local useMultiShot = UI.config.read("useMultiShot", "true")
 
         -- END SETTINGS --
 
@@ -96,11 +98,11 @@ Routine:RegisterRoutine(function()
         end
 
         if not UnitIsDeadOrGhost(pet) and IsPetActive() then
-            if health(pet) > 30 or UnitIsPlayer(target) then
+            if health(pet) > 30 or UnitIsPlayer(target) and enemy(target) then
                 Eval("PetAttack()", "t")
             end
 
-            if health(pet) < 20 and not UnitIsPlayer(target) then
+            if health(pet) < 20 and not UnitIsPlayer(target) and enemy(target) then
                 Eval("PetFollow()", "t")
             end
         end
@@ -110,7 +112,7 @@ Routine:RegisterRoutine(function()
         -- ROTATION --
 
         -- Hunter's Mark
-        if not immune(target, huntersMark) and castable(huntersMark, target) and not debuff(huntersMark, target) then
+        if useHuntersMark and not immune(target, huntersMark) and castable(huntersMark, target) and not debuff(huntersMark, target) then
             return cast(huntersMark, target)
         end
 
@@ -148,7 +150,7 @@ Routine:RegisterRoutine(function()
         end
 
         -- Multi Shot
-        if enemies(target, 20) >= 2 and castable(multiShot, target) then
+        if useMultiShot and enemies(target, 20) >= 2 and castable(multiShot, target) then
             return cast(multiShot, target)
         end
 
@@ -246,7 +248,7 @@ Routine:RegisterRoutine(function()
         -- END BUFFS --
 
         -- Pet Attack
-        if UnitExists(target) and alive(target) and distance(player, target) <= math.random(35, 45) then
+        if UnitExists(target) and alive(target) and enemy(target) and distance(player, target) <= math.random(35, 45) then
             Eval("PetAttack()", "t")
         end
     end
@@ -329,6 +331,18 @@ local bapesBM_settings = {
             key = "useSerpentSting",
             type = "checkbox",
             text = "Use Serpent Sting"
+        },
+        -- Use Hunters Mark
+        {
+            key = "useHuntersMark",
+            type = "checkbox",
+            text = "Use Hunter's Mark"
+        },
+        -- Use Multi-shot
+        {
+            key = "useMultiShot",
+            type = "checkbox",
+            text = "Use Multi-shot"
         }
     }
 }

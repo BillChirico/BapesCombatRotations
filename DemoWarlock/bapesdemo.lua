@@ -102,7 +102,7 @@ Routine:RegisterRoutine(function()
 
         -- BUFFS --
 
-        if mana <= lifeTapPercentage and castable(lifetap, player) then
+        if mana <= lifeTapPercentage and castable(lifeTap, player) then
             cast(lifeTap, player)
         end
 
@@ -114,7 +114,7 @@ Routine:RegisterRoutine(function()
             return cast(wand, target)
         end
 
-        if not UnitIsDeadOrGhost(pet) and IsPetActive() then
+        if not UnitIsDeadOrGhost(pet) and IsPetActive() and enemy(target) then
             Eval("PetAttack()", "t")
         end
 
@@ -214,7 +214,7 @@ Routine:RegisterRoutine(function()
         if useHealthStone and castable(createHealthstone, player) then
             for _, healthstone in pairs(healthstones) do
                 if itemInBags(healthstone) then
-                    break
+                    return
                 end
             end
 
@@ -258,7 +258,7 @@ Routine:RegisterRoutine(function()
         -- END BUFFS --
 
         -- Pet Attack
-        if UnitExists(target) and alive(target) and distance(player, target) <= math.random(30, 40) then
+        if UnitExists(target) and alive(target) and enemy(target) and distance(player, target) <= math.random(30, 40) then
             Eval("PetAttack()", "t")
         end
     end
