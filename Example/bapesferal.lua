@@ -17,6 +17,28 @@ Routine:RegisterRoutine(function()
       return
     end
 
+    local function manacost(spellname)
+      if not spellname then
+        return 0
+      else
+        local costTable = GetSpellPowerCost(spellname)
+        if costTable == nil then
+          return 0
+        end
+        for _, costInfo in pairs(costTable) do
+          if costInfo.type == 0 then
+            return costInfo.cost
+          end
+        end
+      end
+    end
+
+    local function PowerShift()
+      if buff(CatForm,"player") and power() <= 8 and power() >= manacost("Cat Form") then
+        Eval('RunMacroText("/return cast !Cat Form")', 'r')
+      end 
+    end
+
     -- COMBAT --
     local function do_combat()
       local mana = power()
