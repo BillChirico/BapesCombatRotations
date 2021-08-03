@@ -107,7 +107,7 @@ Routine:RegisterRoutine(function()
 
         -- BUFFS --
 
-        if mana <= lifeTapPercentage and castable(lifetap, player) then
+        if mana <= lifeTapPercentage and castable(lifeTap, player) then
             cast(lifeTap, player)
         end
 
@@ -250,7 +250,7 @@ Routine:RegisterRoutine(function()
         if useHealthStone and castable(createHealthstone, player) then
             for _, healthstone in pairs(healthstones) do
                 if itemInBags(healthstone) then
-                    break
+                    return
                 end
             end
 
@@ -261,7 +261,7 @@ Routine:RegisterRoutine(function()
         if useSoulstone and castable(createSoulstone, player) then
             for _, soulstoneItem in pairs(soulstones) do
                 if itemInBags(soulstoneItem) then
-                    break
+                    return
                 end
             end
 

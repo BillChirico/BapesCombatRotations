@@ -225,7 +225,7 @@ Routine:RegisterRoutine(function()
         if useSoulstone and castable(createSoulstone, player) then
             for _, soulstoneItem in pairs(soulstones) do
                 if itemInBags(soulstoneItem) then
-                    break
+                    return
                 end
             end
 
