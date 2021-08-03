@@ -1,6 +1,3 @@
--- Created By Bapes#1111 --
--- Please do not distrubute without consent --
-
 local Tinkr, UI = ...
 local name = "Bapes Feral Rotation"
 local version = "v1.2"
@@ -18,6 +15,22 @@ Routine:RegisterRoutine(function()
 
     if not latencyCheck() then
       return
+    end
+
+    local function manacost(spellname)
+      if not spellname then
+        return 0
+      else
+        local costTable = GetSpellPowerCost(spellname)
+        if costTable == nil then
+          return 0
+        end
+        for _, costInfo in pairs(costTable) do
+          if costInfo.type == 0 then
+            return costInfo.cost
+          end
+        end
+      end
     end
 
     -- COMBAT --
@@ -124,6 +137,11 @@ Routine:RegisterRoutine(function()
       -- CAT ROTATION --
 
       if buff(catForm, player) then
+        -- Power Shift
+        if power() <= 8 and power() >= manacost("Cat Form") then
+          Eval('RunMacroText("/return cast !Cat Form")', 'r')
+        end 
+
         -- Rake
         if not debuff(rake, target) and comboPoints < 5 and castable(rake, target) then
           return cast(rake, target)

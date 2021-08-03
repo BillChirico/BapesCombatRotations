@@ -115,6 +115,7 @@ Routine:RegisterRoutine(function()
       -- SPELLS --
 
       local battleShout = highestrank(6673)
+      local charge = highestrank(100)
 
       -- END SPELLS --
 
@@ -129,6 +130,14 @@ Routine:RegisterRoutine(function()
       end
 
       -- END BUFFS --
+
+      -- START COMBAT --
+
+      if castable(charge, target) then
+        return cast(charge, target)
+      end
+
+      -- END COMBAT --
     end
 
     if combat(player) then
