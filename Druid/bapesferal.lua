@@ -46,6 +46,8 @@ Routine:RegisterRoutine(function()
 
       local useInnervate = UI.config.read("useInnervate", "false")
 
+      local usePowershift = UI.config.read("usePowershift", "false")
+
       local useBearForm = UI.config.read("useBearForm", "true")
       local bearFormPercentage = UI.config.read("bearFormPercentage", 50)
 
@@ -138,9 +140,9 @@ Routine:RegisterRoutine(function()
 
       if buff(catForm, player) then
         -- Power Shift
-        if power() <= 8 and power() >= manacost("Cat Form") then
+        if usePowershift and power() <= 8 and power() >= manacost("Cat Form") then
           Eval('RunMacroText("/return cast !Cat Form")', 'r')
-        end 
+        end
 
         -- Rake
         if not debuff(rake, target) and comboPoints < 5 and castable(rake, target) then
@@ -429,6 +431,18 @@ local bapesFeral_settings = {
       min = 5,
       max = 95,
       step = 5
+    },
+    -- Combat --
+    {
+      key = "heading",
+      type = "heading",
+      text = "Combat"
+    },
+    -- Powershift
+    {
+      key = "usePowershift",
+      type = "checkbox",
+      text = "Cat Form Powershift"
     }
   }
 }
