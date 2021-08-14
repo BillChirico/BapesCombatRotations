@@ -13,359 +13,365 @@ local pet = "pet"
 -- Print name and version
 print("|cFFFFD700[Bapes Scripts]|cFF8A2BE2 " .. name .. " " .. version)
 
-Routine:RegisterRoutine(function()
+Routine:RegisterRoutine(
+  function()
     if gcd() > latency() then
-        return
+      return
     end
 
     if not latencyCheck() then
-        return
+      return
     end
 
     if mounted() then
-        return
+      return
     end
 
     -- COMBAT --
     local function do_combat()
-        local mana = power()
+      local mana = power()
 
-        -- SETTINGS --
+      -- SETTINGS --
 
-        local useHealthStone = UI.config.read("useHealthStone", "true")
-        local healthstonePercentage = UI.config.read("healthstonePercentage", 40)
-        local healthFunnelPercentage = UI.config.read("healthFunnelPercentage", 30)
+      local useHealthStone = UI.config.read("useHealthStone", "true")
+      local healthstonePercentage = UI.config.read("healthstonePercentage", 40)
+      local healthFunnelPercentage = UI.config.read("healthFunnelPercentage", 30)
 
-        local lifeTapPercentage = UI.config.read("lifeTapPercentage", 40)
+      local lifeTapPercentage = UI.config.read("lifeTapPercentage", 40)
 
-        local useWand = UI.config.read("useWand", "true")
-        local drainSoulPercentage = UI.config.read("drainSoulPercentage", 5)
+      local useWand = UI.config.read("useWand", "true")
+      local drainSoulPercentage = UI.config.read("drainSoulPercentage", 5)
 
-        -- END SETTINGS --
+      -- END SETTINGS --
 
-        -- SPELLS --
+      -- SPELLS --
 
-        local lifeTap = highestrank(1454)
-        local healthFunnel = highestrank(755)
+      local lifeTap = highestrank(1454)
+      local healthFunnel = highestrank(755)
 
-        local wand = highestrank(5019)
+      local wand = highestrank(5019)
 
-        local agony = highestrank(980)
-        local corruption = highestrank(172)
-        local drainLife = highestrank(689)
-        local drainSoul = highestrank(1120)
+      local agony = highestrank(980)
+      local corruption = highestrank(172)
+      local drainLife = highestrank(689)
+      local drainSoul = highestrank(1120)
 
-        -- END SPELLS --
+      -- END SPELLS --
 
-        -- ITEMS --
+      -- ITEMS --
 
-        local healthstones = {
-            19005,
-            19004,
-            5512,
-            19007,
-            19006,
-            5511,
-            19009,
-            19008,
-            19011,
-            19010,
-            5510,
-            19013,
-            19012,
-            9421,
-            22105,
-            22104,
-            22103
-        }
+      local healthstones = {
+        19005,
+        19004,
+        5512,
+        19007,
+        19006,
+        5511,
+        19009,
+        19008,
+        19011,
+        19010,
+        5510,
+        19013,
+        19012,
+        9421,
+        22105,
+        22104,
+        22103
+      }
 
-        local soulShard = 6265;
+      local soulShard = 6265
 
-        -- END ITEMS --
+      -- END ITEMS --
 
-        -- HEALING --
+      -- HEALING --
 
-        -- Healthstone
-        if health() <= healthstonePercentage and useHealthStone then
-            for _, healthstone in pairs(healthstones) do
-                if itemInBags(healthstone) and usable(healthstone) then
-                    return useItem(healthstone, player)
-                end
-            end
+      -- Healthstone
+      if health() <= healthstonePercentage and useHealthStone then
+        for _, healthstone in pairs(healthstones) do
+          if itemInBags(healthstone) and usable(healthstone) then
+            return useItem(healthstone, player)
+          end
         end
+      end
 
-        -- Health Funnel
-        if health(pet) <= healthFunnelPercentage and castable(healthFunnel, pet) and not debuff(healthFunnel, player) then
-            return cast(healthFunnel, pet)
-        end
+      -- Health Funnel
+      if health(pet) <= healthFunnelPercentage and castable(healthFunnel, pet) and not debuff(healthFunnel, player) then
+        return cast(healthFunnel, pet)
+      end
 
-        -- END HEALING --
+      -- END HEALING --
 
-        -- BUFFS --
+      -- BUFFS --
 
-        if mana <= lifeTapPercentage and castable(lifeTap, player) then
-            cast(lifeTap, player)
-        end
+      if mana <= lifeTapPercentage and castable(lifeTap, player) then
+        cast(lifeTap, player)
+      end
 
-        -- END BUFFS --
+      -- END BUFFS --
 
-        -- ATTACK START --
+      -- ATTACK START --
 
-        if useWand and castable(wand, target) and not IsAutoRepeatSpell(wand) then
-            return cast(wand, target)
-        end
+      if useWand and castable(wand, target) and not IsAutoRepeatSpell(wand) then
+        return cast(wand, target)
+      end
 
-        if not UnitIsDeadOrGhost(pet) and IsPetActive() and enemy(target) then
-            Eval("PetAttack()", "t")
-        end
+      if not UnitIsDeadOrGhost(pet) and IsPetActive() and enemy(target) then
+        Eval("PetAttack()", "t")
+      end
 
-        -- END ATTACK START --
+      -- END ATTACK START --
 
-        -- ROTATION --
+      -- ROTATION --
 
-        -- Curse of Agony
-        if health(target) > drainSoulPercentage and not debuff(agony, target) and castable(agony, target) then
-            return cast(agony, target)
-        end
+      -- Curse of Agony
+      if health(target) > drainSoulPercentage and not debuff(agony, target) and castable(agony, target) then
+        return cast(agony, target)
+      end
 
-        -- Corruption
-        if health(target) > drainSoulPercentage and not debuff(corruption, target) and castable(corruption, target) then
-            return cast(corruption, target)
-        end
+      -- Corruption
+      if health(target) > drainSoulPercentage and not debuff(corruption, target) and castable(corruption, target) then
+        return cast(corruption, target)
+      end
 
-        -- Drain Life
-        if health(target) > drainSoulPercentage and not debuff(drainLife, target) and castable(drainLife, target) then
-            return cast(drainLife, target)
-        end
+      -- Drain Life
+      if health(target) > drainSoulPercentage and not debuff(drainLife, target) and castable(drainLife, target) then
+        return cast(drainLife, target)
+      end
 
-        -- Drain Soul
-        if health(target) <= drainSoulPercentage and itemcount(soulShard) < 5 and not debuff(drainSoul, target) and castable(drainSoul, target) then
-            return cast(drainSoul, target)
-        end
+      -- Drain Soul
+      if
+        health(target) <= drainSoulPercentage and itemcount(soulShard) < 5 and not debuff(drainSoul, target) and
+          castable(drainSoul, target)
+       then
+        return cast(drainSoul, target)
+      end
 
-        -- END ROTATION --
+      -- END ROTATION --
     end
 
     -- RESTING --
     local function do_resting()
-        if UnitIsDeadOrGhost(player) or UnitIsDeadOrGhost(target) or IsEatingOrDrinking() then
+      if UnitIsDeadOrGhost(player) or UnitIsDeadOrGhost(target) or IsEatingOrDrinking() then
+        return
+      end
+
+      -- SETTINGS --
+
+      local useHealthStone = UI.config.read("useHealthStone", "true")
+      local useSoulstone = UI.config.read("useSoulstone", "true")
+
+      -- END SETTINGS --
+
+      -- SPELLS --
+
+      local createHealthstone = highestrank(6201)
+      local createSoulstone = highestrank(693)
+
+      local soulLink = highestrank(19028)
+
+      -- END SPELLS --
+
+      -- ITEMS --
+
+      local healthstones = {
+        19005,
+        19004,
+        5512,
+        19007,
+        19006,
+        5511,
+        19009,
+        19008,
+        19011,
+        19010,
+        5510,
+        19013,
+        19012,
+        9421,
+        22105,
+        22104,
+        22103
+      }
+
+      local soulstones = {
+        [5232] = 20707,
+        [16892] = 20762,
+        [16895] = 20764,
+        [16896] = 20765,
+        [22116] = 27239
+      }
+
+      -- END ITEMS --
+
+      -- PET --
+
+      -- Summon Pet
+      if (UnitIsDeadOrGhost(pet) or not IsPetActive()) and castable(SummonFelguard, player) then
+        return cast(SummonFelguard, player)
+      end
+
+      -- END PET --
+
+      -- STONES --
+
+      -- Healthstone
+      if useHealthStone and castable(createHealthstone, player) then
+        for _, healthstone in pairs(healthstones) do
+          if itemInBags(healthstone) then
             return
+          end
         end
 
-        -- SETTINGS --
+        return cast(createHealthstone, player)
+      end
 
-        local useHealthStone = UI.config.read("useHealthStone", "true")
-        local useSoulstone = UI.config.read("useSoulstone", "true")
-
-        -- END SETTINGS --
-
-        -- SPELLS --
-
-        local createHealthstone = highestrank(6201)
-        local createSoulstone = highestrank(693)
-
-        local soulLink = highestrank(19028)
-
-        -- END SPELLS --
-
-        -- ITEMS --
-
-        local healthstones = {
-            19005,
-            19004,
-            5512,
-            19007,
-            19006,
-            5511,
-            19009,
-            19008,
-            19011,
-            19010,
-            5510,
-            19013,
-            19012,
-            9421,
-            22105,
-            22104,
-            22103
-        }
-
-        local soulstones = {
-            [5232] = 20707,
-            [16892] = 20762,
-            [16895] = 20764,
-            [16896] = 20765,
-            [22116] = 27239
-        }
-
-        -- END ITEMS --
-
-        -- PET --
-
-        -- Summon Pet
-        if (UnitIsDeadOrGhost(pet) or not IsPetActive()) and castable(SummonFelguard, player) then
-            return cast(SummonFelguard, player)
+      -- Soulstone
+      if useSoulstone and castable(createSoulstone, player) then
+        for _, soulstoneItem in pairs(soulstones) do
+          if itemInBags(soulstoneItem) then
+            return
+          end
         end
 
-        -- END PET --
+        return cast(createSoulstone, player)
+      end
 
-        -- STONES --
+      -- END STONES --
 
-        -- Healthstone
-        if useHealthStone and castable(createHealthstone, player) then
-            for _, healthstone in pairs(healthstones) do
-                if itemInBags(healthstone) then
-                    return
-                end
-            end
+      -- BUFFS --
 
-            return cast(createHealthstone, player)
+      -- Fel Armor
+      if castable(FelArmor, player) and not buff(FelArmor, player) then
+        return cast(FelArmor, player)
+      end
+
+      -- Soul Link
+      if IsPetActive() and castable(soulLink, player) and not buff(soulLink, player) and not buff(25228, player) then
+        return cast(soulLink, player)
+      end
+
+      -- Soulstone
+      if useSoulstone then
+        for soulstoneBuff, soulstoneItem in pairs(soulstones) do
+          if itemInBags(soulstoneItem) and not buff(soulstoneBuff, player) and usable(soulstoneItem) then
+            return useItem(soulstoneItem, player)
+          end
         end
+      end
 
-        -- Soulstone
-        if useSoulstone and castable(createSoulstone, player) then
-            for _, soulstoneItem in pairs(soulstones) do
-                if itemInBags(soulstoneItem) then
-                    return
-                end
-            end
+      -- END BUFFS --
 
-            return cast(createSoulstone, player)
-        end
-
-        -- END STONES --
-
-        -- BUFFS --
-
-        -- Fel Armor
-        if castable(FelArmor, player) and not buff(FelArmor, player) then
-            return cast(FelArmor, player)
-        end
-
-        -- Soul Link
-        if IsPetActive() and castable(soulLink, player) and not buff(soulLink, player) and not buff(25228, player) then
-            return cast(soulLink, player)
-        end
-
-        -- Soulstone
-        if useSoulstone then
-            for soulstoneBuff, soulstoneItem in pairs(soulstones) do
-                if itemInBags(soulstoneItem) and not buff(soulstoneBuff, player) and usable(soulstoneItem) then
-                    return useItem(soulstoneItem, player)
-                end
-            end
-        end
-
-        -- END BUFFS --
-
-        -- Pet Attack
-        if UnitExists(target) and alive(target) and enemy(target) and distance(player, target) <= math.random(30, 40) then
-            Eval("PetAttack()", "t")
-        end
+      -- Pet Attack
+      if UnitExists(target) and alive(target) and enemy(target) and distance(player, target) <= math.random(30, 40) then
+        Eval("PetAttack()", "t")
+      end
     end
 
     if combat(player) then
-        do_combat()
-        return
+      do_combat()
+      return
     else
-        do_resting()
-        return
+      do_resting()
+      return
     end
-
-end, Routine.Classes.Warlock, "bapes-demo")
+  end,
+  Routine.Classes.Warlock,
+  "bapes-demo"
+)
 Routine:LoadRoutine("bapes-demo")
 
 local bapesDemo_settings = {
-    key = "bapes_demo_config",
-    title = "Bapes Scripts",
-    width = 400,
-    height = 300,
-    color = "F58CBA",
-    resize = false,
-    show = false,
-    table = {
-        {
-            key = "heading",
-            type = "heading",
-            text = name .. " " .. version
-        },
-        -- Healing --
-        {
-            key = "heading",
-            type = "heading",
-            text = "Healing"
-        },
-        -- Healthstone
-        {
-            key = "useHealthStone",
-            type = "checkbox",
-            text = "Use Healthstone"
-        },
-        -- Healthstone Percentage
-        {
-            key = "healthstonePercentage",
-            type = "slider",
-            text = "Healthstone Percentage",
-            label = "Healthstone %",
-            min = 5,
-            max = 95,
-            step = 5
-        },
-        -- Health Funnel Percentage
-        {
-            key = "healthFunnelPercentage",
-            type = "slider",
-            text = "Health Funnel Percentagee",
-            label = "Health Funnel  %",
-            min = 0,
-            max = 100,
-            step = 5
-        },
-        -- Buffs --
-        {
-            key = "heading",
-            type = "heading",
-            text = "Buffs"
-        },
-        -- Soulstone
-        {
-            key = "useSoulstone",
-            type = "checkbox",
-            text = "Use Soulstone"
-        },
-        -- Life Tap Percentage
-        {
-            key = "lifeTapPercentage",
-            type = "slider",
-            text = "Life Tap Percentage",
-            label = "Life Tap %",
-            min = 1,
-            max = 100,
-            step = 5
-        },
-        -- Combat Options --
-        {
-            key = "heading",
-            type = "heading",
-            text = "Combat Options"
-        },
-        -- Wand
-        {
-            key = "useWand",
-            type = "checkbox",
-            text = "Use Wand"
-        },
-        -- Drain Soul Percentage
-        {
-            key = "drainSoulPercentage",
-            type = "slider",
-            text = "Drain Soul Percentage",
-            label = "Drain Soul %",
-            min = 5,
-            max = 95,
-            step = 5
-        }
+  key = "bapes_demo_config",
+  title = "Bapes Scripts",
+  width = 400,
+  height = 300,
+  color = "F58CBA",
+  resize = false,
+  show = false,
+  table = {
+    {
+      key = "heading",
+      type = "heading",
+      text = name .. " " .. version
+    },
+    -- Healing --
+    {
+      key = "heading",
+      type = "heading",
+      text = "Healing"
+    },
+    -- Healthstone
+    {
+      key = "useHealthStone",
+      type = "checkbox",
+      text = "Use Healthstone"
+    },
+    -- Healthstone Percentage
+    {
+      key = "healthstonePercentage",
+      type = "slider",
+      text = "Healthstone Percentage",
+      label = "Healthstone %",
+      min = 5,
+      max = 95,
+      step = 5
+    },
+    -- Health Funnel Percentage
+    {
+      key = "healthFunnelPercentage",
+      type = "slider",
+      text = "Health Funnel Percentagee",
+      label = "Health Funnel  %",
+      min = 0,
+      max = 100,
+      step = 5
+    },
+    -- Buffs --
+    {
+      key = "heading",
+      type = "heading",
+      text = "Buffs"
+    },
+    -- Soulstone
+    {
+      key = "useSoulstone",
+      type = "checkbox",
+      text = "Use Soulstone"
+    },
+    -- Life Tap Percentage
+    {
+      key = "lifeTapPercentage",
+      type = "slider",
+      text = "Life Tap Percentage",
+      label = "Life Tap %",
+      min = 1,
+      max = 100,
+      step = 5
+    },
+    -- Combat Options --
+    {
+      key = "heading",
+      type = "heading",
+      text = "Combat Options"
+    },
+    -- Wand
+    {
+      key = "useWand",
+      type = "checkbox",
+      text = "Use Wand"
+    },
+    -- Drain Soul Percentage
+    {
+      key = "drainSoulPercentage",
+      type = "slider",
+      text = "Drain Soul Percentage",
+      label = "Drain Soul %",
+      min = 5,
+      max = 95,
+      step = 5
     }
+  }
 }
 
 UI.build_rotation_gui(bapesDemo_settings)

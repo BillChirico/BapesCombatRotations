@@ -1,0 +1,1 @@
+"**/*.lua": "prettier ${path} --write"
