@@ -1,6 +1,6 @@
 local Tinkr, UI = ...
 local name = "Bapes Feral Rotation"
-local version = "v1.2"
+local version = "v1.3"
 local Routine = Tinkr.Routine
 local player = "player"
 local target = "target"
