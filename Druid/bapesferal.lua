@@ -356,99 +356,159 @@ Routine:RegisterRoutine(function()
 end, Routine.Classes.Druid, "bapes-feral")
 Routine:LoadRoutine("bapes-feral")
 
-local bapesFeral_settings = {
+-- local bapesFeral_settings = {
+--   key = "bapes_feral_config",
+--   title = "Bapes Scripts",
+--   width = 400,
+--   height = 400,
+--   color = "F58CBA",
+--   resize = false,
+--   show = false,
+--   table = {
+--     {
+--       key = "heading",
+--       type = "heading",
+--       text = name .. " " .. version
+--     },
+--     -- Healing --
+--     {
+--       key = "heading",
+--       type = "heading",
+--       text = "Healing"
+--     },
+--     -- Heal in Combat
+--     {
+--       key = "healInCombat",
+--       type = "checkbox",
+--       text = "Heal in Combat"
+--     },
+--     -- Heal out of Combat
+--     {
+--       key = "healOutOfCombat",
+--       type = "checkbox",
+--       text = "Heal out of Combat"
+--     },
+--     -- Healing Percentage
+--     {
+--       key = "healPercentage",
+--       type = "slider",
+--       text = "Healing Percentage",
+--       label = "Healing %",
+--       min = 5,
+--       max = 95,
+--       step = 5
+--     },
+--     -- Buffs --
+--     {
+--       key = "heading",
+--       type = "heading",
+--       text = "Buffs"
+--     },
+--     -- Innervate
+--     {
+--       key = "useInnervate",
+--       type = "checkbox",
+--       text = "Use Innervate"
+--     },
+--     -- Forms --
+--     {
+--       key = "heading",
+--       type = "heading",
+--       text = "Forms"
+--     },
+--     -- Bear Form
+--     {
+--       key = "useBearForm",
+--       type = "checkbox",
+--       text = "Use Bear Form"
+--     },
+--     -- Bear Form Percentage
+--     {
+--       key = "bearFormPercentage",
+--       type = "slider",
+--       text = "Bear Form Percentage",
+--       label = "Bear Form %",
+--       min = 5,
+--       max = 95,
+--       step = 5
+--     },
+--     -- Combat --
+--     {
+--       key = "heading",
+--       type = "heading",
+--       text = "Combat"
+--     },
+--     -- Powershift
+--     {
+--       key = "usePowershift",
+--       type = "checkbox",
+--       text = "Cat Form Powershift"
+--     }
+--   }
+-- }
+
+-- UI.build_rotation_gui(bapesFeral_settings)
+
+-- local bapesFeral_buttons = {}
+
+-- UI.button_factory(bapesFeral_buttons)
+
+local bapesFeralTable = {
   key = "bapes_feral_config",
-  title = "Bapes Scripts",
-  width = 400,
-  height = 400,
-  color = "F58CBA",
-  resize = false,
-  show = false,
-  table = {
-    {
-      key = "heading",
-      type = "heading",
-      text = name .. " " .. version
-    },
-    -- Healing --
-    {
-      key = "heading",
-      type = "heading",
-      text = "Healing"
-    },
-    -- Heal in Combat
-    {
-      key = "healInCombat",
-      type = "checkbox",
-      text = "Heal in Combat"
-    },
-    -- Heal out of Combat
-    {
-      key = "healOutOfCombat",
-      type = "checkbox",
-      text = "Heal out of Combat"
-    },
-    -- Healing Percentage
-    {
-      key = "healPercentage",
-      type = "slider",
-      text = "Healing Percentage",
-      label = "Healing %",
-      min = 5,
-      max = 95,
-      step = 5
-    },
-    -- Buffs --
-    {
-      key = "heading",
-      type = "heading",
-      text = "Buffs"
-    },
-    -- Innervate
-    {
-      key = "useInnervate",
-      type = "checkbox",
-      text = "Use Innervate"
-    },
-    -- Forms --
-    {
-      key = "heading",
-      type = "heading",
-      text = "Forms"
-    },
-    -- Bear Form
-    {
-      key = "useBearForm",
-      type = "checkbox",
-      text = "Use Bear Form"
-    },
-    -- Bear Form Percentage
-    {
-      key = "bearFormPercentage",
-      type = "slider",
-      text = "Bear Form Percentage",
-      label = "Bear Form %",
-      min = 5,
-      max = 95,
-      step = 5
-    },
-    -- Combat --
-    {
-      key = "heading",
-      type = "heading",
-      text = "Combat"
-    },
-    -- Powershift
-    {
-      key = "usePowershift",
-      type = "checkbox",
-      text = "Cat Form Powershift"
-    }
+  name = "Bapes Feral Druid Rotation",
+  height = "400",
+  width = "600",
+  panels = {
+      {
+          name = "healing",
+          items = {
+              {key = "healInCombat", type = "checkbox", text = "Heal in Combat", desc = "On / Off"},
+              {key = "healOutOfCombat", type = "checkbox", text = "Heal out of Combat", desc = "On / Off"},
+              {
+                  key = "healPercentage",
+                  type = "slider",
+                  text = "Healing Percentage",
+                  label = "Healing %",
+                  min = 5,
+                  max = 95,
+                  step = 5
+              }
+          }
+      },
+      {
+          name = "buffs",
+          items = {
+              {key = "useInnervate", type = "checkbox", text = "Use Innervate", desc = "On / Off"}
+          }
+      },
+      {
+          name = "defensives",
+          items = {
+              {key = "useBearForm", type = "checkbox", text = "Use Bear Form", desc = "On / Off"},
+              {
+                  key = "bearFormPercentage",
+                  type = "slider",
+                  text = "Bear Form Percentage",
+                  label = "Bear Form %",
+                  min = 5,
+                  max = 95,
+                  step = 5
+              }
+          }
+      },
+      {
+          name = "combat",
+          items = {
+              {key = "usePowershift", type = "checkbox", text = "Cat Form Powershift", desc = "On / Off"}
+          }
+      }
+  },
+  tabgroup = {
+      {text = "Healing", value = "one"},
+      {text = "Buffs", value = "two"},
+      {text = "Defensives / Bear Form", value = "three"},
+      {text = "Combat", value = "four"}
   }
 }
 
-UI.build_rotation_gui(bapesFeral_settings)
-
-local bapesFeral_buttons = {}
-
-UI.button_factory(bapesFeral_buttons)
+UI.createpanels(bapesFeralTable)
