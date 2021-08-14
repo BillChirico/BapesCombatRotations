@@ -1,9 +1,65 @@
-local Tinkr, UI = ...
+-- Created By Bapes#1111 --
+-- Please do not distrubute without consent --
+
+---@diagnostic disable: undefined-global, lowercase-global
+local Tinkr = ...
+local wowex = {}
 local name = "Bapes Feral Rotation"
 local version = "v1.3"
 local Routine = Tinkr.Routine
+local Draw = Tinkr.Util.Draw:New()
 local player = "player"
 local target = "target"
+
+-- CROMULON IMPORTS --
+
+Tinkr:require("scripts.cromulon.libs.Libdraw.Libs.LibStub.LibStub", wowex)
+Tinkr:require("scripts.cromulon.libs.Libdraw.LibDraw", wowex)
+Tinkr:require("scripts.cromulon.libs.AceGUI30.AceGUI30", wowex)
+Tinkr:require("scripts.cromulon.libs.AceGUI30.widgets.AceGUIContainer-BlizOptionsGroup", wowex)
+Tinkr:require("scripts.cromulon.libs.AceGUI30.widgets.AceGUIContainer-DropDownGroup", wowex)
+Tinkr:require("scripts.cromulon.libs.AceGUI30.widgets.AceGUIContainer-Frame", wowex)
+Tinkr:require("scripts.cromulon.libs.AceGUI30.widgets.AceGUIContainer-InlineGroup", wowex)
+Tinkr:require("scripts.cromulon.libs.AceGUI30.widgets.AceGUIContainer-ScrollFrame", wowex)
+Tinkr:require("scripts.cromulon.libs.AceGUI30.widgets.AceGUIContainer-SimpleGroup", wowex)
+Tinkr:require("scripts.cromulon.libs.AceGUI30.widgets.AceGUIContainer-TabGroup", wowex)
+Tinkr:require("scripts.cromulon.libs.AceGUI30.widgets.AceGUIContainer-TreeGroup", wowex)
+Tinkr:require("scripts.cromulon.libs.AceGUI30.widgets.AceGUIContainer-Window", wowex)
+Tinkr:require("scripts.cromulon.libs.AceGUI30.widgets.AceGUIWidget-Button", wowex)
+Tinkr:require("scripts.cromulon.libs.AceGUI30.widgets.AceGUIWidget-CheckBox", wowex)
+Tinkr:require("scripts.cromulon.libs.AceGUI30.widgets.AceGUIWidget-ColorPicker", wowex)
+Tinkr:require("scripts.cromulon.libs.AceGUI30.widgets.AceGUIWidget-DropDown", wowex)
+Tinkr:require("scripts.cromulon.libs.AceGUI30.widgets.AceGUIWidget-DropDown-Items", wowex)
+Tinkr:require("scripts.cromulon.libs.AceGUI30.widgets.AceGUIWidget-EditBox", wowex)
+Tinkr:require("scripts.cromulon.libs.AceGUI30.widgets.AceGUIWidget-Heading", wowex)
+Tinkr:require("scripts.cromulon.libs.AceGUI30.widgets.AceGUIWidget-Icon", wowex)
+Tinkr:require("scripts.cromulon.libs.AceGUI30.widgets.AceGUIWidget-InteractiveLabel", wowex)
+Tinkr:require("scripts.cromulon.libs.AceGUI30.widgets.AceGUIWidget-Keybinding", wowex)
+Tinkr:require("scripts.cromulon.libs.AceGUI30.widgets.AceGUIWidget-Label", wowex)
+Tinkr:require("scripts.cromulon.libs.AceGUI30.widgets.AceGUIWidget-MultiLineEditBox", wowex)
+Tinkr:require("scripts.cromulon.libs.AceGUI30.widgets.AceGUIWidget-Slider", wowex)
+Tinkr:require("scripts.cromulon.system.configs", wowex)
+Tinkr:require("scripts.wowex.libs.AceAddon30.AceAddon30", wowex)
+Tinkr:require("scripts.wowex.libs.AceConsole30.AceConsole30", wowex)
+Tinkr:require("scripts.wowex.libs.AceDB30.AceDB30", wowex)
+Tinkr:require("scripts.cromulon.system.storage", wowex)
+Tinkr:require("scripts.cromulon.libs.libCh0tFqRg.libCh0tFqRg", wowex)
+Tinkr:require("scripts.cromulon.libs.libNekSv2Ip.libNekSv2Ip", wowex)
+Tinkr:require("scripts.cromulon.libs.CallbackHandler10.CallbackHandler10", wowex)
+Tinkr:require("scripts.cromulon.libs.HereBeDragons.HereBeDragons-20", wowex)
+Tinkr:require("scripts.cromulon.libs.HereBeDragons.HereBeDragons-pins-20", wowex)
+Tinkr:require("scripts.cromulon.interface.uibuilder", wowex)
+Tinkr:require("scripts.cromulon.interface.buttons", wowex)
+Tinkr:require("scripts.cromulon.interface.panels", wowex)
+Tinkr:require("scripts.cromulon.interface.minimap", wowex)
+
+mybuttons.On = false
+mybuttons.Cooldowns = false
+mybuttons.MultiTarget = false
+mybuttons.Interupts = false
+mybuttons.Settings = false
+
+-- END CROMULON IMPORTS --
 
 -- Print name and version
 print("|cFFFFD700[Bapes Scripts]|cFF8A2BE2 " .. name .. " " .. version)
@@ -41,15 +97,15 @@ Routine:RegisterRoutine(function()
 
       -- SETTINGS --
 
-      local healInCombat = UI.config.read("healInCombat", "true")
-      local healPercentage = UI.config.read("healPercentage", 40)
+      local healInCombat = wowex.config.read("healInCombat", "true")
+      local healPercentage = wowex.config.read("healPercentage", 40)
 
-      local useInnervate = UI.config.read("useInnervate", "false")
+      local useInnervate = wowex.config.read("useInnervate", "false")
 
-      local usePowershift = UI.config.read("usePowershift", "false")
+      local usePowershift = wowex.config.read("usePowershift", "false")
 
-      local useBearForm = UI.config.read("useBearForm", "true")
-      local bearFormPercentage = UI.config.read("bearFormPercentage", 50)
+      local useBearForm = wowex.config.read("useBearForm", "true")
+      local bearFormPercentage = wowex.config.read("bearFormPercentage", 50)
 
       -- END SETTINGS --
 
@@ -224,8 +280,8 @@ Routine:RegisterRoutine(function()
 
       -- SETTINGS --
 
-      local healOutOfCombat = UI.config.read("healOutOfCombat", "true")
-      local healPercentage = UI.config.read("healPercentage", 40)
+      local healOutOfCombat = wowex.config.read("healOutOfCombat", "true")
+      local healPercentage = wowex.config.read("healPercentage", 40)
 
       -- END SETTINGS --
 
@@ -319,17 +375,13 @@ Routine:RegisterRoutine(function()
       -- END BUFFS --
 
       -- Cat Form
-      if
-        UnitExists(target) and alive(target) and not buff(catForm, player) and castable(catForm, player) and
-          distance(player, target) <= math.random(25, 40)
+      if UnitExists(target) and alive(target) and not buff(catForm, player) and castable(catForm, player) and distance(player, target) <= math.random(25, 40)
        then
         return cast(catForm, player)
       end
 
       -- Stealth
-      if
-        UnitExists(target) and alive(target) and not buff(stealth, player) and castable(stealth, player) and
-          distance(player, target) <= 15
+      if wowex.wowexStorage.read("useStealth") and UnitExists(target) and alive(target) and not buff(stealth, player) and castable(stealth, player) and distance(player, target) <= 15
        then
         return cast(stealth, player)
       end
@@ -353,162 +405,82 @@ Routine:RegisterRoutine(function()
         return
     end
 
-end, Routine.Classes.Druid, "bapes-feral")
+end, Routine.Classes.Drwowexd, "bapes-feral")
 Routine:LoadRoutine("bapes-feral")
 
--- local bapesFeral_settings = {
---   key = "bapes_feral_config",
---   title = "Bapes Scripts",
---   width = 400,
---   height = 400,
---   color = "F58CBA",
---   resize = false,
---   show = false,
---   table = {
---     {
---       key = "heading",
---       type = "heading",
---       text = name .. " " .. version
---     },
---     -- Healing --
---     {
---       key = "heading",
---       type = "heading",
---       text = "Healing"
---     },
---     -- Heal in Combat
---     {
---       key = "healInCombat",
---       type = "checkbox",
---       text = "Heal in Combat"
---     },
---     -- Heal out of Combat
---     {
---       key = "healOutOfCombat",
---       type = "checkbox",
---       text = "Heal out of Combat"
---     },
---     -- Healing Percentage
---     {
---       key = "healPercentage",
---       type = "slider",
---       text = "Healing Percentage",
---       label = "Healing %",
---       min = 5,
---       max = 95,
---       step = 5
---     },
---     -- Buffs --
---     {
---       key = "heading",
---       type = "heading",
---       text = "Buffs"
---     },
---     -- Innervate
---     {
---       key = "useInnervate",
---       type = "checkbox",
---       text = "Use Innervate"
---     },
---     -- Forms --
---     {
---       key = "heading",
---       type = "heading",
---       text = "Forms"
---     },
---     -- Bear Form
---     {
---       key = "useBearForm",
---       type = "checkbox",
---       text = "Use Bear Form"
---     },
---     -- Bear Form Percentage
---     {
---       key = "bearFormPercentage",
---       type = "slider",
---       text = "Bear Form Percentage",
---       label = "Bear Form %",
---       min = 5,
---       max = 95,
---       step = 5
---     },
---     -- Combat --
---     {
---       key = "heading",
---       type = "heading",
---       text = "Combat"
---     },
---     -- Powershift
---     {
---       key = "usePowershift",
---       type = "checkbox",
---       text = "Cat Form Powershift"
---     }
---   }
--- }
-
--- UI.build_rotation_gui(bapesFeral_settings)
-
-local bapesFeral_buttons = {}
-
-UI.button_factory(bapesFeral_buttons)
-
-local bapesFeralTable = {
-  key = "bapes_feral_config",
-  name = "Bapes Feral Druid Rotation",
-  height = "400",
-  width = "600",
-  panels = {
-      {
-          name = "healing",
-          items = {
-              {key = "healInCombat", type = "checkbox", text = "Heal in Combat", desc = "On / Off"},
-              {key = "healOutOfCombat", type = "checkbox", text = "Heal out of Combat", desc = "On / Off"},
-              {
-                  key = "healPercentage",
-                  type = "slider",
-                  text = "Healing Percentage",
-                  label = "Healing %",
-                  min = 5,
-                  max = 95,
-                  step = 5
-              }
-          }
-      },
-      {
-          name = "buffs",
-          items = {
-              {key = "useInnervate", type = "checkbox", text = "Use Innervate", desc = "On / Off"}
-          }
-      },
-      {
-          name = "defensives",
-          items = {
-              {key = "useBearForm", type = "checkbox", text = "Use Bear Form", desc = "On / Off"},
-              {
-                  key = "bearFormPercentage",
-                  type = "slider",
-                  text = "Bear Form Percentage",
-                  label = "Bear Form %",
-                  min = 5,
-                  max = 95,
-                  step = 5
-              }
-          }
-      },
-      {
-          name = "combat",
-          items = {
-              {key = "usePowershift", type = "checkbox", text = "Cat Form Powershift", desc = "On / Off"}
-          }
-      }
-  },
-  tabgroup = {
-      {text = "Healing", value = "one"},
-      {text = "Buffs", value = "two"},
-      {text = "Defensives / Bear Form", value = "three"},
-      {text = "Combat", value = "four"}
+local bapesFeral_buttons = {
+  {
+    key = "useProwl",
+    buttonname = "useProwl",
+    texture = "ability_ambush",
+    tooltip = "Prowl",
+    text = "Prowl",
+    setx = "TOP",
+    parent = "settings",
+    sety = "TOPRIGHT"
   }
 }
 
-UI.createpanels(bapesFeralTable)
+wowex.button_factory(bapesFeral_buttons)
+
+Draw:Enable()
+
+local bapesFeralTable = {
+    key = "bapes_feral_config",
+    name = "Bapes Feral Druid Rotation",
+    height = "400",
+    width = "600",
+    panels = {
+        {
+            name = "healing",
+            items = {
+                {key = "healInCombat", type = "checkbox", text = "Heal in Combat", desc = "On / Off"},
+                {key = "healOutOfCombat", type = "checkbox", text = "Heal out of Combat", desc = "On / Off"},
+                {
+                    key = "healPercentage",
+                    type = "slider",
+                    text = "Healing Percentage",
+                    label = "Healing %",
+                    min = 5,
+                    max = 95,
+                    step = 5
+                }
+            }
+        },
+        {
+            name = "buffs",
+            items = {
+                {key = "useInnervate", type = "checkbox", text = "Use Innervate", desc = "On / Off"}
+            }
+        },
+        {
+            name = "defensives",
+            items = {
+                {key = "useBearForm", type = "checkbox", text = "Use Bear Form", desc = "On / Off"},
+                {
+                    key = "bearFormPercentage",
+                    type = "slider",
+                    text = "Bear Form Percentage",
+                    label = "Bear Form %",
+                    min = 5,
+                    max = 95,
+                    step = 5
+                }
+            }
+        },
+        {
+            name = "combat",
+            items = {
+                {key = "usePowershift", type = "checkbox", text = "Cat Form Powershift", desc = "On / Off"}
+            }
+        }
+    },
+    tabgroup = {
+        {text = "Healing", value = "one"},
+        {text = "Buffs", value = "two"},
+        {text = "Defensives / Bear Form", value = "three"},
+        {text = "Combat", value = "four"}
+    }
+}
+
+wowex.createpanels(bapesFeralTable)
