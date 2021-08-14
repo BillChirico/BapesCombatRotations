@@ -1,6 +1,7 @@
- --Created By Bapes#1111 
- --Please do not distrubute without consent 
+-- Created By Bapes#1111 --
+-- Please do not distrubute without consent --
 
+---@diagnostic disable: undefined-global, lowercase-global
     local name = "Bapes Feral Rotation"
     local version = "v1.2"
     local Tinkr = ...

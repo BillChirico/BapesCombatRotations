@@ -1,6 +1,7 @@
 -- Created By Bapes#1111 --
 -- Please do not distrubute without consent --
 
+---@diagnostic disable: undefined-global, lowercase-global
 local Tinkr, UI = ...
 local name = "Bapes TODO Rotation"
 local version = "v1.0"

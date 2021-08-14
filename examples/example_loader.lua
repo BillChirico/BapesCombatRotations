@@ -1,3 +1,7 @@
+-- Created By Bapes#1111 --
+-- Please do not distrubute without consent --
+
+---@diagnostic disable: undefined-global, lowercase-global
 local Tinkr = ...
 local Routine = Tinkr.Routine
 local AceGUI = Tinkr.Util.AceGUI
@@ -38,7 +42,7 @@ Tinkr:require("scripts.cromulon.libs.AceGUI30.widgets.AceGUIWidget-Keybinding", 
 Tinkr:require("scripts.cromulon.libs.AceGUI30.widgets.AceGUIWidget-Label", UI)
 Tinkr:require("scripts.cromulon.libs.AceGUI30.widgets.AceGUIWidget-MultiLineEditBox", UI)
 Tinkr:require("scripts.cromulon.libs.AceGUI30.widgets.AceGUIWidget-Slider", UI)
-Tinkr:require("scripts.cromulon.system.configs", wowUIex)
+Tinkr:require("scripts.cromulon.system.configs", UI)
 Tinkr:require("scripts.wowex.libs.AceAddon30.AceAddon30", UI)
 Tinkr:require("scripts.wowex.libs.AceConsole30.AceConsole30", UI)
 Tinkr:require("scripts.wowex.libs.AceDB30.AceDB30", UI)
