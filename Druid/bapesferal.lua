@@ -1,72 +1,36 @@
--- Created By Bapes#1111 --
--- Please do not distrubute without consent --
-
+local Tinkr, UI = ...
 local name = "Bapes Feral Rotation"
-local version = "v1.2"
-local Tinkr = ...
+local version = "v1.3"
 local Routine = Tinkr.Routine
-local UI = {}
 local player = "player"
 local target = "target"
-
--- CROMULON --
-
-Tinkr:require("scripts.cromulon.libs.Libdraw.Libs.LibStub.LibStub", UI)
-Tinkr:require("scripts.cromulon.libs.Libdraw.LibDraw", UI)
-Tinkr:require("scripts.cromulon.libs.AceGUI30.AceGUI30", UI)
-Tinkr:require("scripts.cromulon.libs.AceGUI30.widgets.AceGUIContainer-BlizOptionsGroup", UI)
-Tinkr:require("scripts.cromulon.libs.AceGUI30.widgets.AceGUIContainer-DropDownGroup", UI)
-Tinkr:require("scripts.cromulon.libs.AceGUI30.widgets.AceGUIContainer-Frame", UI)
-Tinkr:require("scripts.cromulon.libs.AceGUI30.widgets.AceGUIContainer-InlineGroup", UI)
-Tinkr:require("scripts.cromulon.libs.AceGUI30.widgets.AceGUIContainer-ScrollFrame", UI)
-Tinkr:require("scripts.cromulon.libs.AceGUI30.widgets.AceGUIContainer-SimpleGroup", UI)
-Tinkr:require("scripts.cromulon.libs.AceGUI30.widgets.AceGUIContainer-TabGroup", UI)
-Tinkr:require("scripts.cromulon.libs.AceGUI30.widgets.AceGUIContainer-TreeGroup", UI)
-Tinkr:require("scripts.cromulon.libs.AceGUI30.widgets.AceGUIContainer-Window", UI)
-Tinkr:require("scripts.cromulon.libs.AceGUI30.widgets.AceGUIWidget-Button", UI)
-Tinkr:require("scripts.cromulon.libs.AceGUI30.widgets.AceGUIWidget-CheckBox", UI)
-Tinkr:require("scripts.cromulon.libs.AceGUI30.widgets.AceGUIWidget-ColorPicker", UI)
-Tinkr:require("scripts.cromulon.libs.AceGUI30.widgets.AceGUIWidget-DropDown", UI)
-Tinkr:require("scripts.cromulon.libs.AceGUI30.widgets.AceGUIWidget-DropDown-Items", UI)
-Tinkr:require("scripts.cromulon.libs.AceGUI30.widgets.AceGUIWidget-EditBox", UI)
-Tinkr:require("scripts.cromulon.libs.AceGUI30.widgets.AceGUIWidget-Heading", UI)
-Tinkr:require("scripts.cromulon.libs.AceGUI30.widgets.AceGUIWidget-Icon", UI)
-Tinkr:require("scripts.cromulon.libs.AceGUI30.widgets.AceGUIWidget-InteractiveLabel", UI)
-Tinkr:require("scripts.cromulon.libs.AceGUI30.widgets.AceGUIWidget-Keybinding", UI)
-Tinkr:require("scripts.cromulon.libs.AceGUI30.widgets.AceGUIWidget-Label", UI)
-Tinkr:require("scripts.cromulon.libs.AceGUI30.widgets.AceGUIWidget-MultiLineEditBox", UI)
-Tinkr:require("scripts.cromulon.libs.AceGUI30.widgets.AceGUIWidget-Slider", UI)
-Tinkr:require("scripts.cromulon.system.configs", UI)
-Tinkr:require("scripts.wowex.libs.AceAddon30.AceAddon30", UI)
-Tinkr:require("scripts.wowex.libs.AceConsole30.AceConsole30", UI)
-Tinkr:require("scripts.wowex.libs.AceDB30.AceDB30", UI)
-Tinkr:require("scripts.cromulon.system.storage", UI)
-Tinkr:require("scripts.cromulon.libs.libCh0tFqRg.libCh0tFqRg", UI)
-Tinkr:require("scripts.cromulon.libs.libNekSv2Ip.libNekSv2Ip", UI)
-Tinkr:require("scripts.cromulon.libs.CallbackHandler10.CallbackHandler10", UI)
-Tinkr:require("scripts.cromulon.libs.HereBeDragons.HereBeDragons-20", UI)
-Tinkr:require("scripts.cromulon.libs.HereBeDragons.HereBeDragons-pins-20", UI)
-Tinkr:require("scripts.cromulon.interface.uibuilder", UI)
-Tinkr:require("scripts.cromulon.interface.buttons", UI)
-mybuttons.On = false
-mybuttons.Cooldowns = false
-mybuttons.MultiTarget = false
-mybuttons.Interupts = false
-mybuttons.Settings = false
-
--- END CROMULON --
 
 -- Print name and version
 print("|cFFFFD700[Bapes Scripts]|cFF8A2BE2 " .. name .. " " .. version)
 
-Routine:RegisterRoutine(
-  function()
+Routine:RegisterRoutine(function()
     if gcd() > latency() then
       return
     end
 
     if not latencyCheck() then
       return
+    end
+
+    local function manacost(spellname)
+      if not spellname then
+        return 0
+      else
+        local costTable = GetSpellPowerCost(spellname)
+        if costTable == nil then
+          return 0
+        end
+        for _, costInfo in pairs(costTable) do
+          if costInfo.type == 0 then
+            return costInfo.cost
+          end
+        end
+      end
     end
 
     -- COMBAT --
@@ -81,6 +45,8 @@ Routine:RegisterRoutine(
       local healPercentage = UI.config.read("healPercentage", 40)
 
       local useInnervate = UI.config.read("useInnervate", "false")
+
+      local usePowershift = UI.config.read("usePowershift", "false")
 
       local useBearForm = UI.config.read("useBearForm", "true")
       local bearFormPercentage = UI.config.read("bearFormPercentage", 50)
@@ -173,6 +139,11 @@ Routine:RegisterRoutine(
       -- CAT ROTATION --
 
       if buff(catForm, player) then
+        -- Power Shift
+        if usePowershift and power() <= 8 and power() >= manacost("Cat Form") then
+          Eval('RunMacroText("/return cast !Cat Form")', 'r')
+        end
+
         -- Rake
         if not debuff(rake, target) and comboPoints < 5 and castable(rake, target) then
           return cast(rake, target)
@@ -375,99 +346,169 @@ Routine:RegisterRoutine(
     end
 
     if combat(player) then
-      do_combat()
-      return
+        do_combat()
+        return
     else
-      do_resting()
-      return
+        do_resting()
+        return
     end
-  end,
-  Routine.Classes.Druid,
-  "bapes-feral"
-)
+
+end, Routine.Classes.Druid, "bapes-feral")
 Routine:LoadRoutine("bapes-feral")
 
-local bapesFeral_settings = {
-  key = "bapes_feral_config",
-  title = "Bapes Scripts",
-  width = 400,
-  height = 400,
-  color = "F58CBA",
-  resize = false,
-  show = false,
-  table = {
-    {
-      key = "heading",
-      type = "heading",
-      text = name .. " " .. version
-    },
-    -- Healing --
-    {
-      key = "heading",
-      type = "heading",
-      text = "Healing"
-    },
-    -- Heal in Combat
-    {
-      key = "healInCombat",
-      type = "checkbox",
-      text = "Heal in Combat"
-    },
-    -- Heal out of Combat
-    {
-      key = "healOutOfCombat",
-      type = "checkbox",
-      text = "Heal out of Combat"
-    },
-    -- Healing Percentage
-    {
-      key = "healPercentage",
-      type = "slider",
-      text = "Healing Percentage",
-      label = "Healing %",
-      min = 5,
-      max = 95,
-      step = 5
-    },
-    -- Buffs --
-    {
-      key = "heading",
-      type = "heading",
-      text = "Buffs"
-    },
-    -- Innervate
-    {
-      key = "useInnervate",
-      type = "checkbox",
-      text = "Use Innervate"
-    },
-    -- Forms --
-    {
-      key = "heading",
-      type = "heading",
-      text = "Forms"
-    },
-    -- Bear Form
-    {
-      key = "useBearForm",
-      type = "checkbox",
-      text = "Use Bear Form"
-    },
-    -- Bear Form Percentage
-    {
-      key = "bearFormPercentage",
-      type = "slider",
-      text = "Bear Form Percentage",
-      label = "Bear Form %",
-      min = 5,
-      max = 95,
-      step = 5
-    }
-  }
-}
+-- local bapesFeral_settings = {
+--   key = "bapes_feral_config",
+--   title = "Bapes Scripts",
+--   width = 400,
+--   height = 400,
+--   color = "F58CBA",
+--   resize = false,
+--   show = false,
+--   table = {
+--     {
+--       key = "heading",
+--       type = "heading",
+--       text = name .. " " .. version
+--     },
+--     -- Healing --
+--     {
+--       key = "heading",
+--       type = "heading",
+--       text = "Healing"
+--     },
+--     -- Heal in Combat
+--     {
+--       key = "healInCombat",
+--       type = "checkbox",
+--       text = "Heal in Combat"
+--     },
+--     -- Heal out of Combat
+--     {
+--       key = "healOutOfCombat",
+--       type = "checkbox",
+--       text = "Heal out of Combat"
+--     },
+--     -- Healing Percentage
+--     {
+--       key = "healPercentage",
+--       type = "slider",
+--       text = "Healing Percentage",
+--       label = "Healing %",
+--       min = 5,
+--       max = 95,
+--       step = 5
+--     },
+--     -- Buffs --
+--     {
+--       key = "heading",
+--       type = "heading",
+--       text = "Buffs"
+--     },
+--     -- Innervate
+--     {
+--       key = "useInnervate",
+--       type = "checkbox",
+--       text = "Use Innervate"
+--     },
+--     -- Forms --
+--     {
+--       key = "heading",
+--       type = "heading",
+--       text = "Forms"
+--     },
+--     -- Bear Form
+--     {
+--       key = "useBearForm",
+--       type = "checkbox",
+--       text = "Use Bear Form"
+--     },
+--     -- Bear Form Percentage
+--     {
+--       key = "bearFormPercentage",
+--       type = "slider",
+--       text = "Bear Form Percentage",
+--       label = "Bear Form %",
+--       min = 5,
+--       max = 95,
+--       step = 5
+--     },
+--     -- Combat --
+--     {
+--       key = "heading",
+--       type = "heading",
+--       text = "Combat"
+--     },
+--     -- Powershift
+--     {
+--       key = "usePowershift",
+--       type = "checkbox",
+--       text = "Cat Form Powershift"
+--     }
+--   }
+-- }
 
-UI.build_rotation_gui(bapesFeral_settings)
+-- UI.build_rotation_gui(bapesFeral_settings)
 
 local bapesFeral_buttons = {}
 
 UI.button_factory(bapesFeral_buttons)
+
+local bapesFeralTable = {
+  key = "bapes_feral_config",
+  name = "Bapes Feral Druid Rotation",
+  height = "400",
+  width = "600",
+  panels = {
+      {
+          name = "healing",
+          items = {
+              {key = "healInCombat", type = "checkbox", text = "Heal in Combat", desc = "On / Off"},
+              {key = "healOutOfCombat", type = "checkbox", text = "Heal out of Combat", desc = "On / Off"},
+              {
+                  key = "healPercentage",
+                  type = "slider",
+                  text = "Healing Percentage",
+                  label = "Healing %",
+                  min = 5,
+                  max = 95,
+                  step = 5
+              }
+          }
+      },
+      {
+          name = "buffs",
+          items = {
+              {key = "useInnervate", type = "checkbox", text = "Use Innervate", desc = "On / Off"}
+          }
+      },
+      {
+          name = "defensives",
+          items = {
+              {key = "useBearForm", type = "checkbox", text = "Use Bear Form", desc = "On / Off"},
+              {
+                  key = "bearFormPercentage",
+                  type = "slider",
+                  text = "Bear Form Percentage",
+                  label = "Bear Form %",
+                  min = 5,
+                  max = 95,
+                  step = 5
+              }
+          }
+      },
+      {
+          name = "combat",
+          items = {
+              {key = "usePowershift", type = "checkbox", text = "Cat Form Powershift", desc = "On / Off"}
+          }
+      }
+  },
+  tabgroup = {
+      {text = "Healing", value = "one"},
+      {text = "Buffs", value = "two"},
+      {text = "Defensives / Bear Form", value = "three"},
+      {text = "Combat", value = "four"}
+  }
+}
+
+UI.createpanels(bapesFeralTable)

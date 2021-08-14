@@ -1,61 +1,13 @@
 -- Created By Bapes#1111 --
 -- Please do not distrubute without consent --
 
+local Tinkr, UI = ...
 local name = "Bapes BM Rotation"
-local version = "v1.1"
-local Tinkr = ...
+local version = "v1.2"
 local Routine = Tinkr.Routine
-local UI = {}
 local player = "player"
 local target = "target"
 local pet = "pet"
-
--- CROMULON --
-
-Tinkr:require("scripts.cromulon.libs.Libdraw.Libs.LibStub.LibStub", UI)
-Tinkr:require("scripts.cromulon.libs.Libdraw.LibDraw", UI)
-Tinkr:require("scripts.cromulon.libs.AceGUI30.AceGUI30", UI)
-Tinkr:require("scripts.cromulon.libs.AceGUI30.widgets.AceGUIContainer-BlizOptionsGroup", UI)
-Tinkr:require("scripts.cromulon.libs.AceGUI30.widgets.AceGUIContainer-DropDownGroup", UI)
-Tinkr:require("scripts.cromulon.libs.AceGUI30.widgets.AceGUIContainer-Frame", UI)
-Tinkr:require("scripts.cromulon.libs.AceGUI30.widgets.AceGUIContainer-InlineGroup", UI)
-Tinkr:require("scripts.cromulon.libs.AceGUI30.widgets.AceGUIContainer-ScrollFrame", UI)
-Tinkr:require("scripts.cromulon.libs.AceGUI30.widgets.AceGUIContainer-SimpleGroup", UI)
-Tinkr:require("scripts.cromulon.libs.AceGUI30.widgets.AceGUIContainer-TabGroup", UI)
-Tinkr:require("scripts.cromulon.libs.AceGUI30.widgets.AceGUIContainer-TreeGroup", UI)
-Tinkr:require("scripts.cromulon.libs.AceGUI30.widgets.AceGUIContainer-Window", UI)
-Tinkr:require("scripts.cromulon.libs.AceGUI30.widgets.AceGUIWidget-Button", UI)
-Tinkr:require("scripts.cromulon.libs.AceGUI30.widgets.AceGUIWidget-CheckBox", UI)
-Tinkr:require("scripts.cromulon.libs.AceGUI30.widgets.AceGUIWidget-ColorPicker", UI)
-Tinkr:require("scripts.cromulon.libs.AceGUI30.widgets.AceGUIWidget-DropDown", UI)
-Tinkr:require("scripts.cromulon.libs.AceGUI30.widgets.AceGUIWidget-DropDown-Items", UI)
-Tinkr:require("scripts.cromulon.libs.AceGUI30.widgets.AceGUIWidget-EditBox", UI)
-Tinkr:require("scripts.cromulon.libs.AceGUI30.widgets.AceGUIWidget-Heading", UI)
-Tinkr:require("scripts.cromulon.libs.AceGUI30.widgets.AceGUIWidget-Icon", UI)
-Tinkr:require("scripts.cromulon.libs.AceGUI30.widgets.AceGUIWidget-InteractiveLabel", UI)
-Tinkr:require("scripts.cromulon.libs.AceGUI30.widgets.AceGUIWidget-Keybinding", UI)
-Tinkr:require("scripts.cromulon.libs.AceGUI30.widgets.AceGUIWidget-Label", UI)
-Tinkr:require("scripts.cromulon.libs.AceGUI30.widgets.AceGUIWidget-MultiLineEditBox", UI)
-Tinkr:require("scripts.cromulon.libs.AceGUI30.widgets.AceGUIWidget-Slider", UI)
-Tinkr:require("scripts.cromulon.system.configs", UI)
-Tinkr:require("scripts.wowex.libs.AceAddon30.AceAddon30", UI)
-Tinkr:require("scripts.wowex.libs.AceConsole30.AceConsole30", UI)
-Tinkr:require("scripts.wowex.libs.AceDB30.AceDB30", UI)
-Tinkr:require("scripts.cromulon.system.storage", UI)
-Tinkr:require("scripts.cromulon.libs.libCh0tFqRg.libCh0tFqRg", UI)
-Tinkr:require("scripts.cromulon.libs.libNekSv2Ip.libNekSv2Ip", UI)
-Tinkr:require("scripts.cromulon.libs.CallbackHandler10.CallbackHandler10", UI)
-Tinkr:require("scripts.cromulon.libs.HereBeDragons.HereBeDragons-20", UI)
-Tinkr:require("scripts.cromulon.libs.HereBeDragons.HereBeDragons-pins-20", UI)
-Tinkr:require("scripts.cromulon.interface.uibuilder", UI)
-Tinkr:require("scripts.cromulon.interface.buttons", UI)
-mybuttons.On = false
-mybuttons.Cooldowns = false
-mybuttons.MultiTarget = false
-mybuttons.Interupts = false
-mybuttons.Settings = false
-
--- END CROMULON --
 
 -- Print name and version
 print("|cFFFFD700[Bapes Scripts]|cFF8A2BE2 " .. name .. " " .. version)
@@ -76,6 +28,9 @@ Routine:RegisterRoutine(function()
         local mendPetInCombat = UI.config.read("mendPetInCombat", "true")
         local mendPetPercentage = UI.config.read("mendPetPercentage", 40)
         local useTraps = UI.config.read("useTraps", "true")
+        local useSerpentSting = UI.config.read("useSerpentSting", "false")
+        local useHuntersMark = UI.config.read("useHuntersMark", "true")
+        local useMultiShot = UI.config.read("useMultiShot", "true")
 
         -- END SETTINGS --
 
@@ -98,6 +53,7 @@ Routine:RegisterRoutine(function()
         local steadyShot = highestrank(34120)
         local killCommand = highestrank(34026)
         local multiShot = highestrank(2643)
+        local serpentSting = highestrank(1978)
 
         -- END SPELLS --
 
@@ -142,11 +98,11 @@ Routine:RegisterRoutine(function()
         end
 
         if not UnitIsDeadOrGhost(pet) and IsPetActive() then
-            if health(pet) > 30 or UnitIsPlayer(target) then
+            if health(pet) > 30 or UnitIsPlayer(target) and enemy(target) then
                 Eval("PetAttack()", "t")
             end
 
-            if health(pet) < 20 and not UnitIsPlayer(target) then
+            if health(pet) < 20 and not UnitIsPlayer(target) and enemy(target) then
                 Eval("PetFollow()", "t")
             end
         end
@@ -156,13 +112,18 @@ Routine:RegisterRoutine(function()
         -- ROTATION --
 
         -- Hunter's Mark
-        if not immune(target, huntersMark) and castable(huntersMark, target) and not debuff(huntersMark, target) then
+        if useHuntersMark and not immune(target, huntersMark) and castable(huntersMark, target) and not debuff(huntersMark, target) then
             return cast(huntersMark, target)
         end
 
         -- Concussive Shot
         if moving(target) and not melee() and UnitIsUnit(player, "targettarget") and castable(concussiveShot, target) then
             return cast(concussiveShot, target)
+        end
+
+        -- Serpent Sting
+        if useSerpentSting and castable(serpentSting, target) and not debuff(serpentSting, target) then
+            return cast(serpentSting, target)
         end
 
         -- Traps
@@ -189,8 +150,14 @@ Routine:RegisterRoutine(function()
         end
 
         -- Multi Shot
-        if enemies(target, 20) >= 2 and castable(multiShot, target) then
+        if useMultiShot and enemies(target, 20) >= 2 and castable(multiShot, target) then
             return cast(multiShot, target)
+        end
+
+        -- Arcane Shot
+        if not castable(Multishot, target) and spellisspell(lastspell(1), AutoShot) and
+            spellisspell(lastspell(2), SteadyShot) and castable(ArcaneShot, target) then
+            return cast(ArcaneShot, target)
         end
 
         -- Steady Shot 
@@ -281,7 +248,7 @@ Routine:RegisterRoutine(function()
         -- END BUFFS --
 
         -- Pet Attack
-        if UnitExists(target) and alive(target) and distance(player, target) <= math.random(35, 45) then
+        if UnitExists(target) and alive(target) and enemy(target) and distance(player, target) <= math.random(35, 45) then
             Eval("PetAttack()", "t")
         end
     end
@@ -358,13 +325,30 @@ local bapesBM_settings = {
             key = "useTraps",
             type = "checkbox",
             text = "Use Traps"
+        },
+        -- Use Serpent Sting
+        {
+            key = "useSerpentSting",
+            type = "checkbox",
+            text = "Use Serpent Sting"
+        },
+        -- Use Hunters Mark
+        {
+            key = "useHuntersMark",
+            type = "checkbox",
+            text = "Use Hunter's Mark"
+        },
+        -- Use Multi-shot
+        {
+            key = "useMultiShot",
+            type = "checkbox",
+            text = "Use Multi-shot"
         }
     }
 }
 
 UI.build_rotation_gui(bapesBM_settings)
 
-local bapesBM_buttons = {
-}
+local bapesBM_buttons = {}
 
 UI.button_factory(bapesBM_buttons)

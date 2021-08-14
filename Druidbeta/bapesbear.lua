@@ -1,9 +1,9 @@
 -- Created By Bapes#1111 --
 -- Please do not distrubute without consent --
 
+local Tinkr, UI = ...
 local name = "Bapes Bear Rotation"
 local version = "v1.0-beta"
-local Tinkr = ...
 local Routine = Tinkr.Routine
 local player = "player"
 local target = "target"
@@ -120,6 +120,13 @@ Routine:RegisterRoutine(function()
         end
 
         -- SPELLS --
+
+        local bearForm = highestrank(5487)
+
+        -- Dire Bear
+        if not bearForm then
+            bearForm = highestrank(9634)
+        end
         
         local omenOfClarity = highestrank(16864)
 
@@ -183,8 +190,8 @@ Routine:RegisterRoutine(function()
         -- END BUFFS --
 
         -- Bear Form
-        if UnitExists(target) and alive(target) and not buff(5487, player) and castable(5487, player) and distance(player, target) <= math.random(25, 40) then
-            return cast(5487, player)
+        if UnitExists(target) and alive(target) and not buff(bearForm, player) and castable(bearForm, player) and distance(player, target) <= math.random(25, 40) then
+            return cast(bearForm, player)
         end
 
         -- Feral Charge

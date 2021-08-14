@@ -1,61 +1,13 @@
 -- Created By Bapes#1111 --
 -- Please do not distrubute without consent --
 
-local name = "Bapes Demo Rotation"
+local Tinkr, UI = ...
+local name = "Bapes Destro Rotation"
 local version = "v1.1"
-local Tinkr = ...
 local Routine = Tinkr.Routine
-local UI = {}
 local player = "player"
 local target = "target"
 local pet = "pet"
-
--- CROMULON --
-
-Tinkr:require("scripts.cromulon.libs.Libdraw.Libs.LibStub.LibStub", UI)
-Tinkr:require("scripts.cromulon.libs.Libdraw.LibDraw", UI)
-Tinkr:require("scripts.cromulon.libs.AceGUI30.AceGUI30", UI)
-Tinkr:require("scripts.cromulon.libs.AceGUI30.widgets.AceGUIContainer-BlizOptionsGroup", UI)
-Tinkr:require("scripts.cromulon.libs.AceGUI30.widgets.AceGUIContainer-DropDownGroup", UI)
-Tinkr:require("scripts.cromulon.libs.AceGUI30.widgets.AceGUIContainer-Frame", UI)
-Tinkr:require("scripts.cromulon.libs.AceGUI30.widgets.AceGUIContainer-InlineGroup", UI)
-Tinkr:require("scripts.cromulon.libs.AceGUI30.widgets.AceGUIContainer-ScrollFrame", UI)
-Tinkr:require("scripts.cromulon.libs.AceGUI30.widgets.AceGUIContainer-SimpleGroup", UI)
-Tinkr:require("scripts.cromulon.libs.AceGUI30.widgets.AceGUIContainer-TabGroup", UI)
-Tinkr:require("scripts.cromulon.libs.AceGUI30.widgets.AceGUIContainer-TreeGroup", UI)
-Tinkr:require("scripts.cromulon.libs.AceGUI30.widgets.AceGUIContainer-Window", UI)
-Tinkr:require("scripts.cromulon.libs.AceGUI30.widgets.AceGUIWidget-Button", UI)
-Tinkr:require("scripts.cromulon.libs.AceGUI30.widgets.AceGUIWidget-CheckBox", UI)
-Tinkr:require("scripts.cromulon.libs.AceGUI30.widgets.AceGUIWidget-ColorPicker", UI)
-Tinkr:require("scripts.cromulon.libs.AceGUI30.widgets.AceGUIWidget-DropDown", UI)
-Tinkr:require("scripts.cromulon.libs.AceGUI30.widgets.AceGUIWidget-DropDown-Items", UI)
-Tinkr:require("scripts.cromulon.libs.AceGUI30.widgets.AceGUIWidget-EditBox", UI)
-Tinkr:require("scripts.cromulon.libs.AceGUI30.widgets.AceGUIWidget-Heading", UI)
-Tinkr:require("scripts.cromulon.libs.AceGUI30.widgets.AceGUIWidget-Icon", UI)
-Tinkr:require("scripts.cromulon.libs.AceGUI30.widgets.AceGUIWidget-InteractiveLabel", UI)
-Tinkr:require("scripts.cromulon.libs.AceGUI30.widgets.AceGUIWidget-Keybinding", UI)
-Tinkr:require("scripts.cromulon.libs.AceGUI30.widgets.AceGUIWidget-Label", UI)
-Tinkr:require("scripts.cromulon.libs.AceGUI30.widgets.AceGUIWidget-MultiLineEditBox", UI)
-Tinkr:require("scripts.cromulon.libs.AceGUI30.widgets.AceGUIWidget-Slider", UI)
-Tinkr:require("scripts.cromulon.system.configs", UI)
-Tinkr:require("scripts.wowex.libs.AceAddon30.AceAddon30", UI)
-Tinkr:require("scripts.wowex.libs.AceConsole30.AceConsole30", UI)
-Tinkr:require("scripts.wowex.libs.AceDB30.AceDB30", UI)
-Tinkr:require("scripts.cromulon.system.storage", UI)
-Tinkr:require("scripts.cromulon.libs.libCh0tFqRg.libCh0tFqRg", UI)
-Tinkr:require("scripts.cromulon.libs.libNekSv2Ip.libNekSv2Ip", UI)
-Tinkr:require("scripts.cromulon.libs.CallbackHandler10.CallbackHandler10", UI)
-Tinkr:require("scripts.cromulon.libs.HereBeDragons.HereBeDragons-20", UI)
-Tinkr:require("scripts.cromulon.libs.HereBeDragons.HereBeDragons-pins-20", UI)
-Tinkr:require("scripts.cromulon.interface.uibuilder", UI)
-Tinkr:require("scripts.cromulon.interface.buttons", UI)
-mybuttons.On = false
-mybuttons.Cooldowns = false
-mybuttons.MultiTarget = false
-mybuttons.Interupts = false
-mybuttons.Settings = false
-
--- END CROMULON --
 
 -- Print name and version
 print("|cFFFFD700[Bapes Scripts]|cFF8A2BE2 " .. name .. " " .. version)
@@ -86,6 +38,10 @@ Routine:RegisterRoutine(function()
 
         local useWand = UI.config.read("useWand", "true")
         local drainSoulPercentage = UI.config.read("drainSoulPercentage", 5)
+        local shadowburnPercentage = UI.config.read("shadowburnPercentage", 5)
+        local conflagratePercentage = UI.config.read("conflagratePercentage", 10)
+
+        local curse = UI.config.read("curse", "Elements")
 
         -- END SETTINGS --
 
@@ -95,9 +51,17 @@ Routine:RegisterRoutine(function()
 
         local wand = highestrank(5019)
 
+        local elements = highestrank(1490)
+        local recklessness = highestrank(704)
+        local doom = highestrank(603)
         local agony = highestrank(980)
-        local corruption = highestrank(172)
-        local drainLife = highestrank(689)
+        local exhaustion = highestrank(18223)
+        local tongues = highestrank(1714)
+
+        local immolate = highestrank(348)
+        local shadowBolt = highestrank(686)
+        local shadowburn = highestrank(17877)
+        local conflagrate = highestrank(17962)
         local drainSoul = highestrank(1120)
 
         -- END SPELLS --
@@ -143,7 +107,7 @@ Routine:RegisterRoutine(function()
 
         -- BUFFS --
 
-        if mana <= lifeTapPercentage and castable(lifetap, player) then
+        if mana <= lifeTapPercentage and castable(lifeTap, player) then
             cast(lifeTap, player)
         end
 
@@ -155,32 +119,60 @@ Routine:RegisterRoutine(function()
             return cast(wand, target)
         end
 
-        if not UnitIsDeadOrGhost(pet) and IsPetActive() then
-            Eval("PetAttack()", "t")
-        end
-
         -- END ATTACK START --
 
         -- ROTATION --
 
-        -- Curse of Agony
-        if health(target) > drainSoulPercentage and not debuff(agony, target) and castable(agony, target) then
-            return cast(agony, target)
+        -- Curse
+        if curse == "Elements" then
+            if not debuff(elements, target) and castable(elements, target) then
+                return cast(elements, target)
+            end
+        elseif curse == "Recklessness" then
+            if not debuff(recklessness, target) and castable(recklessness, target) then
+                return cast(recklessness, target)
+            end
+        elseif curse == "Doom" then
+            if not debuff(doom, target) and castable(doom, target) then
+                return cast(doom, target)
+            end
+        elseif curse == "Agony" then
+            if not debuff(agony, target) and castable(agony, target) then
+                return cast(agony, target)
+            end
+        elseif curse == "Exhaustion" then
+            if not debuff(exhaustion, target) and castable(exhaustion, target) then
+                return cast(exhaustion, target)
+            end
+        elseif curse == "Tongues" then
+            if not debuff(tongues, target) and castable(tongues, target) then
+                return cast(tongues, target)
+            end
         end
 
-        -- Corruption
-        if health(target) > drainSoulPercentage and not debuff(corruption, target) and castable(corruption, target) then
-            return cast(corruption, target)
+        -- Shadowburn
+        if health(target) <= shadowburnPercentage and castable(shadowburn, target) then
+            return cast(shadowburn, target)
         end
 
-        -- Drain Life
-        if health(target) > drainSoulPercentage and not debuff(drainLife, target) and castable(drainLife, target) then
-            return cast(drainLife, target)
+        -- Conflagrate
+        if health(target) <= conflagratePercentage and castable(conflagrate, target) then
+            return cast(conflagrate, target)
         end
 
         -- Drain Soul
         if health(target) <= drainSoulPercentage and itemcount(soulShard) < 5 and not debuff(drainSoul, target) and castable(drainSoul, target) then
             return cast(drainSoul, target)
+        end
+
+        -- Immolate
+        if not debuff(immolate, target) and castable(immolate, target) then
+            return cast(immolate, target)
+        end
+
+        -- Shadow Bolt
+        if castable(shadowBolt, target) then
+            return cast(shadowBolt, target)
         end
 
         -- END ROTATION --
@@ -201,11 +193,13 @@ Routine:RegisterRoutine(function()
 
         -- SPELLS --
 
-        local summonFelguard = highestrank(30146)
+        local summonSuccubus = highestrank(712)
         local createHealthstone = highestrank(6201)
         local createSoulstone = highestrank(693)
 
-        local soulLink = highestrank(19028)
+        local demonArmor = highestrank(706)
+        local demonicSacrifice = highestrank(18788)
+        local touchOfShadow = highestrank(18791)
 
         -- END SPELLS --
 
@@ -244,8 +238,8 @@ Routine:RegisterRoutine(function()
         -- PET --
 
         -- Summon Pet
-        if (UnitIsDeadOrGhost(pet) or not IsPetActive()) and castable(summonFelguard, player) then
-            return cast(summonFelguard, player)
+        if (UnitIsDeadOrGhost(pet) or not IsPetActive()) and castable(summonSuccubus, player) and not buff(touchOfShadow, player) then
+            return cast(summonSuccubus, player)
         end
 
         -- END PET --
@@ -256,7 +250,7 @@ Routine:RegisterRoutine(function()
         if useHealthStone and castable(createHealthstone, player) then
             for _, healthstone in pairs(healthstones) do
                 if itemInBags(healthstone) then
-                    break
+                    return
                 end
             end
 
@@ -267,7 +261,7 @@ Routine:RegisterRoutine(function()
         if useSoulstone and castable(createSoulstone, player) then
             for _, soulstoneItem in pairs(soulstones) do
                 if itemInBags(soulstoneItem) then
-                    break
+                    return
                 end
             end
 
@@ -278,14 +272,14 @@ Routine:RegisterRoutine(function()
 
         -- BUFFS --
 
-        -- Fel Armor
-        if castable(FelArmor, player) and not buff(FelArmor, player) then
-            return cast(FelArmor, player)
+        -- Demon Armor
+        if castable(demonArmor, player) and not buff(demonArmor, player) then
+            return cast(demonArmor, player)
         end
 
-        -- Soul Link
-        if castable(soulLink, player) and not buff(25228, player) then
-            return cast(soulLink, player)
+        -- Demonic Sacrifice
+        if castable(demonicSacrifice, player) and not buff(touchOfShadow, player) then
+            return cast(demonicSacrifice, player)
         end
 
         -- Soulstone
@@ -298,11 +292,6 @@ Routine:RegisterRoutine(function()
         end
 
         -- END BUFFS --
-
-        -- Pet Attack
-        if UnitExists(target) and alive(target) and distance(player, target) <= math.random(30, 40) then
-            Eval("PetAttack()", "t")
-        end
     end
 
     if combat(player) then
@@ -313,11 +302,11 @@ Routine:RegisterRoutine(function()
         return
     end
 
-end, Routine.Classes.Warlock, "bapes-demo")
-Routine:LoadRoutine("bapes-demo")
+end, Routine.Classes.Warlock, "bapes-destro")
+Routine:LoadRoutine("bapes-destro")
 
-local bapesDemo_settings = {
-    key = "bapes_demo_config",
+local bapesDestro_settings = {
+    key = "bapes_destro_config",
     title = "Bapes Scripts",
     width = 400,
     height = 300,
@@ -395,13 +384,40 @@ local bapesDemo_settings = {
             min = 5,
             max = 95,
             step = 5
+        },
+        -- Shadowburn Percentage
+        {
+            key = "shadowburnPercentage",
+            type = "slider",
+            text = "Shadowburn Percentage",
+            label = "Shadowburn %",
+            min = 5,
+            max = 95,
+            step = 5
+        },
+        -- Conflagrate Percentage
+        {
+            key = "conflagratePercentage",
+            type = "slider",
+            text = "Conflagrate Percentage",
+            label = "Conflagrate %",
+            min = 5,
+            max = 95,
+            step = 5
+        },
+        -- Curse
+        {
+            key = "curse",
+            width = 130,
+            label = "Curse",
+            type = "dropdown",
+            options = {"Elements", "Recklessness", "Doom", "Agony", "Exhaustion", "Tongues"}
         }
     }
 }
 
-UI.build_rotation_gui(bapesDemo_settings)
+UI.build_rotation_gui(bapesDestro_settings)
 
-local bapesDemo_buttons = {
-}
+local bapesDestro_buttons = {}
 
-UI.button_factory(bapesDemo_buttons)
+UI.button_factory(bapesDestro_buttons)

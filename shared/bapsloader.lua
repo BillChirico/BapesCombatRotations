@@ -1,7 +1,13 @@
 local Tinkr = ...
 local UI = {}
-
--- CROMULON IMPORTS --
+local OM = Tinkr.Util.ObjectManager
+local Common = Tinkr.Common
+local Draw = Tinkr.Util.Draw:New()
+local AceGUI = Tinkr.Util.AceGUI
+local Config = Tinkr.Util.Config
+local config = Config:New("bapes-feral")
+local Util = Tinkr.Util
+local Evaluator = Util.Evaluator
 
 Tinkr:require("scripts.cromulon.libs.Libdraw.Libs.LibStub.LibStub", UI)
 Tinkr:require("scripts.cromulon.libs.Libdraw.LibDraw", UI)
@@ -40,10 +46,68 @@ Tinkr:require("scripts.cromulon.libs.HereBeDragons.HereBeDragons-20", UI)
 Tinkr:require("scripts.cromulon.libs.HereBeDragons.HereBeDragons-pins-20", UI)
 Tinkr:require("scripts.cromulon.interface.uibuilder", UI)
 Tinkr:require("scripts.cromulon.interface.buttons", UI)
+Tinkr:require("scripts.rotationloader", UI)
 mybuttons.On = false
 mybuttons.Cooldowns = false
 mybuttons.MultiTarget = false
 mybuttons.Interupts = false
 mybuttons.Settings = false
 
--- END CROMULON IMPORTS --
+
+local function DrawUI()
+    local frame = AceGUI:Create("Window")
+    frame:SetTitle('|cFFFF0000Tinkr Rotation Loader')
+    frame:EnableResize(false)
+    frame:SetWidth(225)
+    frame:SetHeight(140)
+    frame:SetLayout("List")
+    frame:SetCallback("OnClose", function(widget)
+    end)
+    
+    local buttonGroup = AceGUI:Create("SimpleGroup")
+    buttonGroup:SetFullWidth(true)
+    buttonGroup:SetHeight(75)
+    
+    local license = AceGUI:Create("EditBox")
+    license:SetLabel("|cFF00FF00Paste your Bapes Token")
+    license:SetWidth(200)
+    license:DisableButton(false)
+    license:SetText(config:Read('license', 'Paste Bapes Token Here'))
+    license:SetCallback("OnTextChanged", function(self, event, value)
+        config:Write("license", value)
+    end)
+    license:SetCallback("OnEnterPressed", function(self, event, text)
+        --  do_auth()
+    end)
+    
+    buttonGroup:AddChild(license)
+    
+    
+    local rotationlist = AceGUI:Create("Dropdown")
+    rotationlist:SetValue( "None")
+    rotationlist:SetList({'Feral Druid', 'BM Hunter', 'Destro Warlock','Demo Warlock', 'Beta - Bear Druid' })
+    rotationlist:SetWidth(200)
+    rotationlist:SetText('Rotation')
+    rotationlist:SetLabel('|cFF00FF00Select Rotation')
+    rotationlist:SetCallback(
+    "OnValueChanged",
+    function(widget, event, value)
+        local rota = ""
+        
+        if value == 1 then rota = 'Druid'
+        elseif value == 2 then rota = 'Hunter'
+        elseif value == 3 then rota = 'DestroWarlock'
+        elseif value == 4 then rota = 'DemoWarlock'
+        elseif value == 5 then rota = 'Druidbeta'
+        end
+        print ('You have selected: ' .. rota)
+        frame:Hide() 
+        print ('Bapes', rota,config:Read('license', 'Paste Bapes Token Here') )
+        UI.LoadRotation('Bapes', rota, config:Read('license', 'Paste Bapes Token Here'))
+    end
+    )
+    buttonGroup:AddChild(rotationlist)
+    frame:AddChild(buttonGroup)
+
+end
+DrawUI()
