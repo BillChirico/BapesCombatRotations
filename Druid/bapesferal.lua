@@ -449,9 +449,9 @@ Routine:LoadRoutine("bapes-feral")
 
 -- UI.build_rotation_gui(bapesFeral_settings)
 
--- local bapesFeral_buttons = {}
+local bapesFeral_buttons = {}
 
--- UI.button_factory(bapesFeral_buttons)
+UI.button_factory(bapesFeral_buttons)
 
 local bapesFeralTable = {
   key = "bapes_feral_config",
